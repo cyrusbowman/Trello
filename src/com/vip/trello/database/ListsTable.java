@@ -19,7 +19,7 @@ public class ListsTable {
     		+ ")";
     
     // Creating Tables
-    public static void onCreate(SQLiteDatabase db) {    	
+    public static void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE); 
     }
  

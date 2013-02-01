@@ -3,6 +3,7 @@ package com.vip.trello.service;
 import java.util.ArrayList;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -53,6 +54,12 @@ public class TrelloService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
 		Log.d("TrelloService", "RECEIVED INTENT");
+		
+		Bundle data = intent.getExtras();
+		Log.d("TrelloService", data.getString("Test1"));
+		Log.d("TrelloService", data.getString("Test2"));
+		
+		
 		return START_STICKY;
 	}
 
