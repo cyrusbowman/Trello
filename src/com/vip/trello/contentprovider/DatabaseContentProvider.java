@@ -43,10 +43,10 @@ public class DatabaseContentProvider extends ContentProvider  {
 	private static final String AUTHORITY = "com.vip.trello.contentprovider";
 	
 	//Predefined tables
-	private static final String BOARDS_PATH = "boards";
-	private static final String LISTS_PATH = "lists";
-	private static final String CARDS_PATH = "cards";
-	private static final String LISTENERS_PATH = "listeners";
+	public static final String BOARDS_PATH = "boards";
+	public static final String LISTS_PATH = "lists";
+	public static final String CARDS_PATH = "cards";
+	public static final String LISTENERS_PATH = "listeners";
 	
 	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/");
 
@@ -60,14 +60,14 @@ public class DatabaseContentProvider extends ContentProvider  {
 		sURIMatcher.addURI(AUTHORITY, BOARDS_PATH, URIMATCH_BOARDS);
 		sURIMatcher.addURI(AUTHORITY, BOARDS_PATH + "/*", URIMATCH_BOARD_ID);
 		
-		sURIMatcher.addURI(AUTHORITY, BOARDS_PATH, URIMATCH_LISTS);
-		sURIMatcher.addURI(AUTHORITY, BOARDS_PATH + "/*", URIMATCH_LIST_ID);
+		sURIMatcher.addURI(AUTHORITY, LISTS_PATH, URIMATCH_LISTS);
+		sURIMatcher.addURI(AUTHORITY, LISTS_PATH + "/*", URIMATCH_LIST_ID);
 		
-		sURIMatcher.addURI(AUTHORITY, BOARDS_PATH, URIMATCH_CARDS);
-		sURIMatcher.addURI(AUTHORITY, BOARDS_PATH + "/*", URIMATCH_CARD_ID);
+		sURIMatcher.addURI(AUTHORITY, CARDS_PATH, URIMATCH_CARDS);
+		sURIMatcher.addURI(AUTHORITY, CARDS_PATH + "/*", URIMATCH_CARD_ID);
 		
-		sURIMatcher.addURI(AUTHORITY, BOARDS_PATH, URIMATCH_CARDS);
-		sURIMatcher.addURI(AUTHORITY, BOARDS_PATH + "/*", URIMATCH_CARD_ID);
+		sURIMatcher.addURI(AUTHORITY, LISTENERS_PATH, URIMATCH_CARDS);
+		sURIMatcher.addURI(AUTHORITY, LISTENERS_PATH + "/*", URIMATCH_CARD_ID);
 	}
 	
 	@Override
@@ -93,7 +93,7 @@ public class DatabaseContentProvider extends ContentProvider  {
 			case URIMATCH_BOARD_ID:
 				queryBuilder.setTables(BoardsTable.TABLE_NAME);
 				// Adding the ID to the original query
-				queryBuilder.appendWhere(BoardsTable.TRELLO_ID + "=" + uri.getLastPathSegment());
+				queryBuilder.appendWhere(BoardsTable.TRELLO_ID + "= '" + uri.getLastPathSegment() + "'");
 				break;
 			case URIMATCH_LISTS:
 				queryBuilder.setTables(ListsTable.TABLE_NAME);
@@ -101,7 +101,7 @@ public class DatabaseContentProvider extends ContentProvider  {
 			case URIMATCH_LIST_ID:
 				queryBuilder.setTables(ListsTable.TABLE_NAME);
 				// Adding the ID to the original query
-				queryBuilder.appendWhere(ListsTable.TRELLO_ID + "=" + uri.getLastPathSegment());
+				queryBuilder.appendWhere(ListsTable.TRELLO_ID + "= '" + uri.getLastPathSegment() + "'");
 				break;
 			case URIMATCH_CARDS:
 				queryBuilder.setTables(CardsTable.TABLE_NAME);
@@ -109,7 +109,7 @@ public class DatabaseContentProvider extends ContentProvider  {
 			case URIMATCH_CARD_ID:
 				queryBuilder.setTables(CardsTable.TABLE_NAME);
 				// Adding the ID to the original query
-				queryBuilder.appendWhere(CardsTable.TRELLO_ID + "=" + uri.getLastPathSegment());
+				queryBuilder.appendWhere(CardsTable.TRELLO_ID + "= '" + uri.getLastPathSegment() + "'");
 				break;
 			case URIMATCH_LISTENERS:
 				queryBuilder.setTables(ListenersTable.TABLE_NAME);
@@ -117,7 +117,7 @@ public class DatabaseContentProvider extends ContentProvider  {
 			case URIMATCH_LISTENER_ID:
 				queryBuilder.setTables(ListenersTable.TABLE_NAME);
 				// Adding the ID to the original query, should select multiple, Trello_ID not unique on listeners
-				queryBuilder.appendWhere(ListenersTable.TRELLO_ID + "=" + uri.getLastPathSegment());
+				queryBuilder.appendWhere(ListenersTable.TRELLO_ID + "= '" + uri.getLastPathSegment() + "'");
 				break;
 			default:
 			  throw new IllegalArgumentException("Unknown URI: " + uri);

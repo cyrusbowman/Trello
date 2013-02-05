@@ -1,6 +1,9 @@
 package com.vip.trello.service;
 
 import java.util.ArrayList;
+
+import com.vip.trello.internet.BoardsHandler;
+
 import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +22,8 @@ public class TrelloService extends Service {
 	private Boolean serviceIsRunning = false; // Is service started already
 	private serviceHandler myServiceHandler = new serviceHandler(this);
 	final Messenger mMessenger = new Messenger(myServiceHandler);
+	
+	private BoardsHandler boardHandler = new BoardsHandler(this);
 	/** 
 	* A constructor is required, and must call the super IntentService(String)
 	* constructor with a name for the worker thread.
@@ -56,10 +61,20 @@ public class TrelloService extends Service {
 		Log.d("TrelloService", "RECEIVED INTENT");
 		
 		Bundle data = intent.getExtras();
-		Log.d("TrelloService", data.getString("Test1"));
-		Log.d("TrelloService", data.getString("Test2"));
+		if(data.containsKey("type")){
+			if(data.getString("type").contentEquals("card")){
+				
+			} else if(data.getString("type").contentEquals("list")){
+				
+			} else if(data.getString("type").contentEquals("board")){
+				Log.d("TrelloService", "Passing to BoardHandler");
+				boardHandler.handle(data);
+			}
+		}
 		
-		
+		if(data.containsKey("listener") && data.getString("listener").contentEquals("true")){
+			//Add id to listener table
+		}
 		return START_STICKY;
 	}
 

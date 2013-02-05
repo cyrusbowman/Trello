@@ -15,7 +15,7 @@ public class BoardsTable {
     		+ "(" 
             + TRELLO_ID + " VARCHAR(50) PRIMARY KEY," 
     		+ DATE + " VARCHAR(50),"
-            + SYNCED + " INTEGER,"
+            + SYNCED + " INTEGER"
     		+ ")";
     
     // Creating Tables
