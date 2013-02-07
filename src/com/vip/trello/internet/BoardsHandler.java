@@ -2,6 +2,7 @@ package com.vip.trello.internet;
 
 import com.vip.trello.contentprovider.DatabaseContentProvider;
 import com.vip.trello.database.BoardsTable;
+import com.vip.trello.database.ListenersTable;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,7 +13,7 @@ import android.util.Log;
 
 public class BoardsHandler {
 	Context AppContext;
-	private String BaseURI = DatabaseContentProvider.CONTENT_URI + DatabaseContentProvider.BOARDS_PATH;
+	private String BoardsURI = DatabaseContentProvider.CONTENT_URI + DatabaseContentProvider.BOARDS_PATH;
 		
 	public BoardsHandler(Context applicationContext) {
 		if(applicationContext == null){
@@ -46,12 +47,14 @@ public class BoardsHandler {
 		Log.d("BoardsHandler", "Push Request");
 		
 		String trello_id = data.getString("id");
+		String package_name = data.getString("listener");
+		
 		ContentValues values = new ContentValues();
 		Boolean update = false;
 		
 		//Check if exists in db
-		Uri boardUri = Uri.parse(BaseURI + "/" + trello_id);
-		String[] projectionExists = { BoardsTable.TRELLO_ID, BoardsTable.SYNCED };
+		Uri boardUri = Uri.parse(BoardsURI + "/" + trello_id);
+		String[] projectionExists = { BoardsTable.COL_TRELLO_ID, BoardsTable.COL_SYNCED };
 		Cursor cursor = AppContext.getContentResolver().query(boardUri, projectionExists, null, null, null);
 		if (cursor.moveToFirst()) {
 			//Exists
@@ -62,19 +65,23 @@ public class BoardsHandler {
 		if(update){
 			Log.d("BoardsHandler", "Updating in db");
 			//Update in database
-			values.put(BoardsTable.SYNCED, 0);
+			values.put(BoardsTable.COL_SYNCED, 0);
 			AppContext.getContentResolver().update(boardUri, values, null, null);
 		} else {
 			Log.d("BoardsHandler", "Adding to db");
 			//Add to database
-			values.put(BoardsTable.SYNCED, 0);
-			values.put(BoardsTable.TRELLO_ID, trello_id);
-			AppContext.getContentResolver().insert(Uri.parse(BaseURI), values);
+			values.put(BoardsTable.COL_SYNCED, 0);
+			values.put(BoardsTable.COL_TRELLO_ID, trello_id);
+			AppContext.getContentResolver().insert(Uri.parse(BoardsURI), values);
+			
+			//Add listener
+			 values = new ContentValues();
+			 values.put(ListenersTable.COL_PACKAGE, package_name);
 		}
 		
 		
 		//Try read
-		String[] projection = { BoardsTable.TRELLO_ID, BoardsTable.SYNCED, BoardsTable.DATE };
+		String[] projection = { BoardsTable.COL_TRELLO_ID, BoardsTable.COL_SYNCED, BoardsTable.COL_DATE };
 		cursor = AppContext.getContentResolver().query(boardUri, projection, null, null, null);
 		if (cursor.moveToFirst()) {
             do {

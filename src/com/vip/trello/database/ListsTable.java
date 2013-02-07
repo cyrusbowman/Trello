@@ -7,15 +7,15 @@ public class ListsTable {
 	public static final String TABLE_NAME = "lists";
  
     // Table Columns names
-    public static final String TRELLO_ID = "_id"; //How to tell if new board or not
-    public static final String DATE = "date";
-    public static final String SYNCED = "synced";
+    public static final String COL_TRELLO_ID = "_id"; //How to tell if new board or not
+    public static final String COL_DATE = "date";
+    public static final String COL_SYNCED = "synced";
     
     private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME 
     		+ " (" 
-            + TRELLO_ID + " VARCHAR(50) PRIMARY KEY," 
-    		+ DATE + " VARCHAR(50),"
-            + SYNCED + " INTEGER"
+            + COL_TRELLO_ID + " VARCHAR(50) PRIMARY KEY," 
+    		+ COL_DATE + " VARCHAR(50),"
+            + COL_SYNCED + " INTEGER"
     		+ ")";
     
     // Creating Tables

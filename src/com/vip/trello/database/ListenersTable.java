@@ -7,20 +7,20 @@ public class ListenersTable {
 	public static final String TABLE_NAME = "listeners";
  
     // Table Columns names
-	public static final String ID = "_id";
-    public static final String TRELLO_ID = "trello_id";
-    public static final String TABLE = "tablename";
-    public static final String URI = "uri";
+	private static final String COL_ID = "_id";
+    public static final String COL_TRELLO_ID = "trello_id";
+    public static final String COL_TABLE = "tablename";
+    public static final String COL_PACKAGE = "package";
     
     private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME 
     		+ " (" 
-            + ID + " INTEGER PRIMARY KEY AUTOINCREMENT," 
-            + TRELLO_ID + " VARCHAR(50),"
-    		+ TABLE + " VARCHAR(10)," //ie. boards, lists, cards
-            + URI + " VARCHAR(150)"
+            + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," 
+            + COL_TRELLO_ID + " VARCHAR(50),"
+    		+ COL_TABLE + " VARCHAR(10)," //ie. boards, lists, cards
+            + COL_PACKAGE + " VARCHAR(200)"
     		+ ")";
     private static final String CREATE_INDEX = "CREATE INDEX listeners_trello_id ON " + TABLE_NAME
-    		+ " (" + TRELLO_ID + ")";
+    		+ " (" + COL_TRELLO_ID + ")";
     
     // Creating Tables and indexes
     public static void onCreate(SQLiteDatabase db) {    	

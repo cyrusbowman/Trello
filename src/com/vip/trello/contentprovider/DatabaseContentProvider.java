@@ -2,10 +2,6 @@ package com.vip.trello.contentprovider;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import com.vip.trello.database.BoardsTable;
 import com.vip.trello.database.CardsTable;
@@ -93,7 +89,7 @@ public class DatabaseContentProvider extends ContentProvider  {
 			case URIMATCH_BOARD_ID:
 				queryBuilder.setTables(BoardsTable.TABLE_NAME);
 				// Adding the ID to the original query
-				queryBuilder.appendWhere(BoardsTable.TRELLO_ID + "= '" + uri.getLastPathSegment() + "'");
+				queryBuilder.appendWhere(BoardsTable.COL_TRELLO_ID + "= '" + uri.getLastPathSegment() + "'");
 				break;
 			case URIMATCH_LISTS:
 				queryBuilder.setTables(ListsTable.TABLE_NAME);
@@ -101,7 +97,7 @@ public class DatabaseContentProvider extends ContentProvider  {
 			case URIMATCH_LIST_ID:
 				queryBuilder.setTables(ListsTable.TABLE_NAME);
 				// Adding the ID to the original query
-				queryBuilder.appendWhere(ListsTable.TRELLO_ID + "= '" + uri.getLastPathSegment() + "'");
+				queryBuilder.appendWhere(ListsTable.COL_TRELLO_ID + "= '" + uri.getLastPathSegment() + "'");
 				break;
 			case URIMATCH_CARDS:
 				queryBuilder.setTables(CardsTable.TABLE_NAME);
@@ -109,7 +105,7 @@ public class DatabaseContentProvider extends ContentProvider  {
 			case URIMATCH_CARD_ID:
 				queryBuilder.setTables(CardsTable.TABLE_NAME);
 				// Adding the ID to the original query
-				queryBuilder.appendWhere(CardsTable.TRELLO_ID + "= '" + uri.getLastPathSegment() + "'");
+				queryBuilder.appendWhere(CardsTable.COL_TRELLO_ID + "= '" + uri.getLastPathSegment() + "'");
 				break;
 			case URIMATCH_LISTENERS:
 				queryBuilder.setTables(ListenersTable.TABLE_NAME);
@@ -117,7 +113,7 @@ public class DatabaseContentProvider extends ContentProvider  {
 			case URIMATCH_LISTENER_ID:
 				queryBuilder.setTables(ListenersTable.TABLE_NAME);
 				// Adding the ID to the original query, should select multiple, Trello_ID not unique on listeners
-				queryBuilder.appendWhere(ListenersTable.TRELLO_ID + "= '" + uri.getLastPathSegment() + "'");
+				queryBuilder.appendWhere(ListenersTable.COL_TRELLO_ID + "= '" + uri.getLastPathSegment() + "'");
 				break;
 			default:
 			  throw new IllegalArgumentException("Unknown URI: " + uri);
@@ -149,10 +145,10 @@ public class DatabaseContentProvider extends ContentProvider  {
 			    id = uri.getLastPathSegment();
 			    if (TextUtils.isEmpty(selection)) {
 			    	rowsDeleted = sqlDB.delete(BoardsTable.TABLE_NAME,
-			    			BoardsTable.TRELLO_ID + "=" + id, null);
+			    			BoardsTable.COL_TRELLO_ID + "=" + id, null);
 			    } else {
 			        rowsDeleted = sqlDB.delete(BoardsTable.TABLE_NAME,
-			        		BoardsTable.TRELLO_ID + "=" + id + " and " + selection, selectionArgs);
+			        		BoardsTable.COL_TRELLO_ID + "=" + id + " and " + selection, selectionArgs);
 			      }
 			      break;
 		    case URIMATCH_LISTS:
@@ -162,10 +158,10 @@ public class DatabaseContentProvider extends ContentProvider  {
 			    id = uri.getLastPathSegment();
 			    if (TextUtils.isEmpty(selection)) {
 			    	rowsDeleted = sqlDB.delete(ListsTable.TABLE_NAME,
-			    			ListsTable.TRELLO_ID + "=" + id, null);
+			    			ListsTable.COL_TRELLO_ID + "=" + id, null);
 			    } else {
 			    	rowsDeleted = sqlDB.delete(ListsTable.TABLE_NAME,
-			    			ListsTable.TRELLO_ID + "=" + id + " and " + selection, selectionArgs);
+			    			ListsTable.COL_TRELLO_ID + "=" + id + " and " + selection, selectionArgs);
 			    }
 		    break;
 		    case URIMATCH_CARDS:
@@ -175,10 +171,10 @@ public class DatabaseContentProvider extends ContentProvider  {
 			    id = uri.getLastPathSegment();
 			    if (TextUtils.isEmpty(selection)) {
 			    	rowsDeleted = sqlDB.delete(CardsTable.TABLE_NAME,
-			    			CardsTable.TRELLO_ID + "=" + id, null);
+			    			CardsTable.COL_TRELLO_ID + "=" + id, null);
 			    } else {
 			    	rowsDeleted = sqlDB.delete(CardsTable.TABLE_NAME,
-			    			CardsTable.TRELLO_ID + "=" + id + " and " + selection, selectionArgs);
+			    			CardsTable.COL_TRELLO_ID + "=" + id + " and " + selection, selectionArgs);
 			    }
 		    case URIMATCH_LISTENERS:
 			    rowsDeleted = sqlDB.delete(CardsTable.TABLE_NAME, selection,selectionArgs);
@@ -187,10 +183,10 @@ public class DatabaseContentProvider extends ContentProvider  {
 			    id = uri.getLastPathSegment();
 			    if (TextUtils.isEmpty(selection)) {
 			    	rowsDeleted = sqlDB.delete(ListenersTable.TABLE_NAME,
-			    			ListenersTable.TRELLO_ID + "=" + id, null);
+			    			ListenersTable.COL_TRELLO_ID + "=" + id, null);
 			    } else {
 			    	rowsDeleted = sqlDB.delete(ListenersTable.TABLE_NAME,
-			    			ListenersTable.TRELLO_ID + "=" + id + " and " + selection, selectionArgs);
+			    			ListenersTable.COL_TRELLO_ID + "=" + id + " and " + selection, selectionArgs);
 			    }
 		    break;
 		    default:
@@ -251,9 +247,9 @@ public class DatabaseContentProvider extends ContentProvider  {
 		    case URIMATCH_BOARD_ID:
 		    	id = uri.getLastPathSegment();
 		    	if (TextUtils.isEmpty(selection)) {
-		    		rowsUpdated = sqlDB.update(BoardsTable.TABLE_NAME, values, BoardsTable.TRELLO_ID + "=" + id, null);
+		    		rowsUpdated = sqlDB.update(BoardsTable.TABLE_NAME, values, BoardsTable.COL_TRELLO_ID + "=" + id, null);
 		    	} else {
-		    		rowsUpdated = sqlDB.update(BoardsTable.TABLE_NAME, values, BoardsTable.TRELLO_ID + "=" + id 
+		    		rowsUpdated = sqlDB.update(BoardsTable.TABLE_NAME, values, BoardsTable.COL_TRELLO_ID + "=" + id 
 		    				+ " and " + selection, selectionArgs);
 		    	}
 		    	break;
@@ -263,9 +259,9 @@ public class DatabaseContentProvider extends ContentProvider  {
 		    case URIMATCH_LIST_ID:
 		    	id = uri.getLastPathSegment();
 		    	if (TextUtils.isEmpty(selection)) {
-		    		rowsUpdated = sqlDB.update(ListsTable.TABLE_NAME, values, ListsTable.TRELLO_ID + "=" + id, null);
+		    		rowsUpdated = sqlDB.update(ListsTable.TABLE_NAME, values, ListsTable.COL_TRELLO_ID + "=" + id, null);
 		    	} else {
-		    		rowsUpdated = sqlDB.update(ListsTable.TABLE_NAME, values, ListsTable.TRELLO_ID + "=" + id 
+		    		rowsUpdated = sqlDB.update(ListsTable.TABLE_NAME, values, ListsTable.COL_TRELLO_ID + "=" + id 
 		    				+ " and " + selection, selectionArgs);
 		    	}
 		    	break;
@@ -275,9 +271,9 @@ public class DatabaseContentProvider extends ContentProvider  {
 		    case URIMATCH_CARD_ID:
 		    	id = uri.getLastPathSegment();
 		    	if (TextUtils.isEmpty(selection)) {
-		    		rowsUpdated = sqlDB.update(CardsTable.TABLE_NAME, values, CardsTable.TRELLO_ID + "=" + id, null);
+		    		rowsUpdated = sqlDB.update(CardsTable.TABLE_NAME, values, CardsTable.COL_TRELLO_ID + "=" + id, null);
 		    	} else {
-		    		rowsUpdated = sqlDB.update(CardsTable.TABLE_NAME, values, CardsTable.TRELLO_ID + "=" + id 
+		    		rowsUpdated = sqlDB.update(CardsTable.TABLE_NAME, values, CardsTable.COL_TRELLO_ID + "=" + id 
 		    				+ " and " + selection, selectionArgs);
 		    	}
 		    	break;
@@ -287,9 +283,9 @@ public class DatabaseContentProvider extends ContentProvider  {
 		    case URIMATCH_LISTENER_ID:
 		    	id = uri.getLastPathSegment();
 		    	if (TextUtils.isEmpty(selection)) {
-		    		rowsUpdated = sqlDB.update(ListenersTable.TABLE_NAME, values, ListenersTable.TRELLO_ID + "=" + id, null);
+		    		rowsUpdated = sqlDB.update(ListenersTable.TABLE_NAME, values, ListenersTable.COL_TRELLO_ID + "=" + id, null);
 		    	} else {
-		    		rowsUpdated = sqlDB.update(ListenersTable.TABLE_NAME, values, ListenersTable.TRELLO_ID + "=" + id 
+		    		rowsUpdated = sqlDB.update(ListenersTable.TABLE_NAME, values, ListenersTable.COL_TRELLO_ID + "=" + id 
 		    				+ " and " + selection, selectionArgs);
 		    	}
 		    	break;
@@ -301,9 +297,9 @@ public class DatabaseContentProvider extends ContentProvider  {
 	}
 	
 	private void checkColumns(String[] projection) {
-		String[] available = { BoardsTable.TRELLO_ID, BoardsTable.DATE, BoardsTable.SYNCED,
-				ListsTable.TRELLO_ID, ListsTable.DATE, ListsTable.SYNCED,
-				CardsTable.TRELLO_ID, CardsTable.DATE, CardsTable.SYNCED};
+		String[] available = { BoardsTable.COL_TRELLO_ID, BoardsTable.COL_DATE, BoardsTable.COL_SYNCED,
+				ListsTable.COL_TRELLO_ID, ListsTable.COL_DATE, ListsTable.COL_SYNCED,
+				CardsTable.COL_TRELLO_ID, CardsTable.COL_DATE, CardsTable.COL_SYNCED};
 		if (projection != null) {
 			HashSet<String> requestedColumns = new HashSet<String>(Arrays.asList(projection));
 			HashSet<String> availableColumns = new HashSet<String>(Arrays.asList(available));
