@@ -6,6 +6,7 @@ import com.vip.trello.internet.BoardsHandler;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -55,12 +56,32 @@ public class TrelloService extends Service {
 		super.onDestroy();
 	}
 
+	class TestTask extends AsyncTask<String, Void, String> {
+	     protected String doInBackground(String... urls) {
+	    	 try {
+	 			for(int i=0; i < 10; i++){
+	 				Thread.sleep(1000);
+	 				String sleeping = "Sleeping" + Integer.toString(i + 1);
+	 				Log.d("TrelloService", sleeping);
+	 			}
+	 		} catch (InterruptedException e) {
+	 			// TODO Auto-generated catch block
+	 			e.printStackTrace();
+	 		}
+	        return urls[0];
+	     }
+
+	     protected void onPostExecute(String result) {
+	    	 Log.d("TrelloService", "DONE! :" + result);
+	     }
+	}
+	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
 		Log.d("TrelloService", "RECEIVED INTENT");
 		
-		Bundle data = intent.getExtras();
+		Bundle data = intent.getExtras();		
 		if(data.containsKey("type")){
 			if(data.getString("type").contentEquals("card")){
 				
@@ -74,6 +95,7 @@ public class TrelloService extends Service {
 		
 		if(data.containsKey("listener") && data.getString("listener").contentEquals("true")){
 			//Add id to listener table
+			
 		}
 		return START_STICKY;
 	}

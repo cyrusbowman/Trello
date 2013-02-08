@@ -10,10 +10,16 @@ public class BoardsTable {
     public static final String COL_TRELLO_ID = "_id"; //How to tell if new board or not
     public static final String COL_DATE = "date";
     public static final String COL_SYNCED = "synced";
+    public static final String COL_OWNER = "owner";
+    public static final String COL_NAME_KEYWORD = "name_keyword";
+    public static final String COL_DESC_KEYWORD = "desc_keyword";
     
     private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME 
     		+ "(" 
             + COL_TRELLO_ID + " VARCHAR(50) PRIMARY KEY," 
+            + COL_OWNER + " VARCHAR(200)," //Package name of where the data is stored
+            + COL_NAME_KEYWORD + " VARCHAR(50),"
+            + COL_DESC_KEYWORD + " VARCHAR(50),"
     		+ COL_DATE + " VARCHAR(50),"
             + COL_SYNCED + " INTEGER"
     		+ ")";

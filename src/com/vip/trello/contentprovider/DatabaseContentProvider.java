@@ -3,6 +3,7 @@ package com.vip.trello.contentprovider;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import com.vip.trello.database.BoardsOwnerFinder;
 import com.vip.trello.database.BoardsTable;
 import com.vip.trello.database.CardsTable;
 import com.vip.trello.database.DatabaseHandler;
@@ -36,6 +37,10 @@ public class DatabaseContentProvider extends ContentProvider  {
 	private static final int URIMATCH_LISTENERS = 70;
 	private static final int URIMATCH_LISTENER_ID = 80;	 //Trello_ID
 	
+	private static final int URIMATCH_BOARDS_OWNERFINDER = 90;
+	private static final int URIMATCH_BOARDS_OWNERFINDER_ID = 100;
+	
+	
 	private static final String AUTHORITY = "com.vip.trello.contentprovider";
 	
 	//Predefined tables
@@ -43,6 +48,7 @@ public class DatabaseContentProvider extends ContentProvider  {
 	public static final String LISTS_PATH = "lists";
 	public static final String CARDS_PATH = "cards";
 	public static final String LISTENERS_PATH = "listeners";
+	public static final String BOARDS_OWNERFINDER_PATH = "boards_ownerfinder";
 	
 	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/");
 
@@ -64,6 +70,9 @@ public class DatabaseContentProvider extends ContentProvider  {
 		
 		sURIMatcher.addURI(AUTHORITY, LISTENERS_PATH, URIMATCH_CARDS);
 		sURIMatcher.addURI(AUTHORITY, LISTENERS_PATH + "/*", URIMATCH_CARD_ID);
+		
+		sURIMatcher.addURI(AUTHORITY, BOARDS_OWNERFINDER_PATH, URIMATCH_BOARDS_OWNERFINDER);
+		sURIMatcher.addURI(AUTHORITY, BOARDS_OWNERFINDER_PATH + "/#", URIMATCH_BOARDS_OWNERFINDER_ID);
 	}
 	
 	@Override
@@ -115,6 +124,14 @@ public class DatabaseContentProvider extends ContentProvider  {
 				// Adding the ID to the original query, should select multiple, Trello_ID not unique on listeners
 				queryBuilder.appendWhere(ListenersTable.COL_TRELLO_ID + "= '" + uri.getLastPathSegment() + "'");
 				break;
+			case URIMATCH_BOARDS_OWNERFINDER:
+				queryBuilder.setTables(BoardsOwnerFinder.TABLE_NAME);
+				break;
+			case URIMATCH_BOARDS_OWNERFINDER_ID:
+				queryBuilder.setTables(BoardsOwnerFinder.TABLE_NAME);
+				// Adding the ID to the original query
+				queryBuilder.appendWhere(BoardsOwnerFinder.COL_ID + "= '" + uri.getLastPathSegment() + "'");
+				break;
 			default:
 			  throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
@@ -140,7 +157,7 @@ public class DatabaseContentProvider extends ContentProvider  {
 		    case URIMATCH_BOARDS:
 		    	rowsDeleted = sqlDB.delete(BoardsTable.TABLE_NAME, selection,
 		    			selectionArgs);
-			break;
+		    	break;
 		    case URIMATCH_BOARD_ID:
 			    id = uri.getLastPathSegment();
 			    if (TextUtils.isEmpty(selection)) {
@@ -188,7 +205,21 @@ public class DatabaseContentProvider extends ContentProvider  {
 			    	rowsDeleted = sqlDB.delete(ListenersTable.TABLE_NAME,
 			    			ListenersTable.COL_TRELLO_ID + "=" + id + " and " + selection, selectionArgs);
 			    }
-		    break;
+			    break;
+		    case URIMATCH_BOARDS_OWNERFINDER:
+		    	rowsDeleted = sqlDB.delete(BoardsOwnerFinder.TABLE_NAME, selection,
+		    			selectionArgs);
+		    	break;
+		    case URIMATCH_BOARDS_OWNERFINDER_ID:
+			    id = uri.getLastPathSegment();
+			    if (TextUtils.isEmpty(selection)) {
+			    	rowsDeleted = sqlDB.delete(BoardsOwnerFinder.TABLE_NAME,
+			    			BoardsOwnerFinder.COL_ID + "=" + id, null);
+			    } else {
+			        rowsDeleted = sqlDB.delete(BoardsOwnerFinder.TABLE_NAME,
+			        		BoardsOwnerFinder.COL_ID + "=" + id + " and " + selection, selectionArgs);
+			      }
+			      break;
 		    default:
 		      throw new IllegalArgumentException("Unknown URI: " + uri);
 	    }
@@ -223,6 +254,10 @@ public class DatabaseContentProvider extends ContentProvider  {
 		    case URIMATCH_LISTENERS:
 		    	id = sqlDB.insert(ListenersTable.TABLE_NAME, null, values);
 		    	tableName = LISTENERS_PATH;
+		    	break;
+		    case URIMATCH_BOARDS_OWNERFINDER:
+		    	id = sqlDB.insert(BoardsOwnerFinder.TABLE_NAME, null, values);
+		    	tableName = BOARDS_OWNERFINDER_PATH;
 		    	break;
 		    default:
 		      throw new IllegalArgumentException("Unknown URI: " + uri);
@@ -286,6 +321,18 @@ public class DatabaseContentProvider extends ContentProvider  {
 		    		rowsUpdated = sqlDB.update(ListenersTable.TABLE_NAME, values, ListenersTable.COL_TRELLO_ID + "=" + id, null);
 		    	} else {
 		    		rowsUpdated = sqlDB.update(ListenersTable.TABLE_NAME, values, ListenersTable.COL_TRELLO_ID + "=" + id 
+		    				+ " and " + selection, selectionArgs);
+		    	}
+		    	break;
+		    case URIMATCH_BOARDS_OWNERFINDER:
+	    		rowsUpdated = sqlDB.update(BoardsOwnerFinder.TABLE_NAME, values, selection, selectionArgs);
+	    		break;
+		    case URIMATCH_BOARDS_OWNERFINDER_ID:
+		    	id = uri.getLastPathSegment();
+		    	if (TextUtils.isEmpty(selection)) {
+		    		rowsUpdated = sqlDB.update(BoardsOwnerFinder.TABLE_NAME, values, BoardsOwnerFinder.COL_ID + "=" + id, null);
+		    	} else {
+		    		rowsUpdated = sqlDB.update(BoardsOwnerFinder.TABLE_NAME, values, BoardsOwnerFinder.COL_ID + "=" + id 
 		    				+ " and " + selection, selectionArgs);
 		    	}
 		    	break;

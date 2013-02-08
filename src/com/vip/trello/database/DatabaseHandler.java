@@ -25,6 +25,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ListsTable.onCreate(db);
         CardsTable.onCreate(db);
         ListenersTable.onCreate(db);
+        
+        BoardsOwnerFinder.onCreate(db);
     }
  
     // Upgrading tables
