@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.ConsoleMessage;
@@ -63,7 +64,20 @@ public class MainActivity extends Activity implements OnClickListener {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
-
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		if(item.getItemId() == R.id.menu_settings){
+			//Show new organization dialog
+			Log.d("Main", "Settings");
+			
+			//TODO Goes to google logout at the moment for testing 
+			Intent go = new Intent(this, Browser.class);
+			startActivity(go);
+		}
+		return false;
+	}
 
 
 	

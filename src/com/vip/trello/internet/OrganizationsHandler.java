@@ -9,8 +9,13 @@ import org.apache.http.HttpResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.BaseAdapter;
+
+import com.vip.trello.OrganizationsList;
 import com.vip.trello.internet.Organization;
 import com.vip.trello.internet.Board;
 
@@ -21,22 +26,24 @@ public class OrganizationsHandler extends CommonLibrary {
 	private String FindOrganizations = null;
 	
 	private List<Organization> organizationList = null;
+	private OrganizationsList parent;
 	
-	
-	public OrganizationsHandler(List<Organization> Organizations, String key, String token) {
+	public OrganizationsHandler(Context parent, List<Organization> Organizations, String key, String token) {
 		organizationList = Organizations;
+		this.parent = (OrganizationsList) parent;
+		
 		FindOrganizations =  "https://trello.com/1/members/my/organizations?key=" + key + "&token=" + token;
 		TrelloKey = key;
 		TrelloToken = token;
 	}
 	
 	public void getOrganizationsList(){
-		organizationList = new ArrayList<Organization>();
 		//populate list
+		organizationList.clear();
 		new getOrganizationsFromTrello().execute(FindOrganizations);
 	}
 	
-	private class getOrganizationsFromTrello extends AsyncTask<String, Void, JSONArray> {
+	private class getOrganizationsFromTrello extends AsyncTask<String, Integer, JSONArray> {
 		protected JSONArray doInBackground(String... urls) {
 			HttpResponse response = getData(urls[0]);
 
@@ -58,15 +65,22 @@ public class OrganizationsHandler extends CommonLibrary {
 			try {
 				json = new JSONArray(result);
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return json;
 		}
 		
+		
+		
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			super.onProgressUpdate(values);
+			
+		}
+
+
+
 		protected void onPostExecute(JSONArray organizations) {
-			
-			
 			// Add these to list
 			for (int i = 0; i < organizations.length(); i++) {
 				
@@ -81,8 +95,8 @@ public class OrganizationsHandler extends CommonLibrary {
 					
 					newOrg.setId(orgo.getString("id"));
 					newOrg.setName(orgo.getString("name"));
-					newOrg.setName(orgo.getString("displayName"));
-					newOrg.setDesc(orgo.getString("desc"));
+					newOrg.setDisplayName(orgo.getString("displayName"));
+					newOrg.setDesc(orgo.getString("desc"));					
 					
 					JSONArray boards = orgo.getJSONArray("idBoards");
 					for(int x=0; x < boards.length(); x++){
@@ -100,7 +114,10 @@ public class OrganizationsHandler extends CommonLibrary {
 				}
 				//Add this organization to the list
 				if(newOrg != null) organizationList.add(newOrg);
-			}
+			}			
+			
+			//Notify list that its done loading
+			parent.doneLoadingList();
 		}
 	}
 	

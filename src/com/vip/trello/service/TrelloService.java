@@ -3,6 +3,7 @@ package com.vip.trello.service;
 import java.util.ArrayList;
 
 import com.vip.trello.internet.BoardsHandler;
+import com.vip.trello.internet.CardsHandler;
 
 import android.app.Service;
 import android.content.Intent;
@@ -25,6 +26,7 @@ public class TrelloService extends Service {
 	final Messenger mMessenger = new Messenger(myServiceHandler);
 	
 	private BoardsHandler boardHandler = new BoardsHandler(this);
+	private CardsHandler cardHandler = new CardsHandler(this);
 	/** 
 	* A constructor is required, and must call the super IntentService(String)
 	* constructor with a name for the worker thread.
@@ -84,7 +86,7 @@ public class TrelloService extends Service {
 		Bundle data = intent.getExtras();		
 		if(data.containsKey("type")){
 			if(data.getString("type").contentEquals("card")){
-				
+				cardHandler.handle(data);
 			} else if(data.getString("type").contentEquals("list")){
 				
 			} else if(data.getString("type").contentEquals("board")){

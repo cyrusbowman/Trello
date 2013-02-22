@@ -40,7 +40,7 @@ public class Organization {
 	
 	public void addBoard(Board newBoard){
 		if(newBoard != null){
-			boards.add(newBoard);
+			//boards.add(newBoard); TODO
 		}
 	}
 	
@@ -52,7 +52,11 @@ public class Organization {
 		return boards.get(Index);
 	}
 	
-	public String toString(){
-		return displayName;
+	public String getDisplayName(){
+		if(displayName == null){
+			return "No Name";
+		} else {
+			return displayName;
+		}
 	}
 }

@@ -5,7 +5,7 @@
     tools:context=".OrganizationsList" >
 
 	<ListView
-	    android:id="@+id/organizationsList"
+	    android:id="@+id/list_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
 	

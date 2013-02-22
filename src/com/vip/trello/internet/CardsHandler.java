@@ -44,21 +44,22 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-public class BoardsHandler {
+public class CardsHandler {
 	Context AppContext;
 	private String BoardsURI = DatabaseContentProvider.CONTENT_URI + DatabaseContentProvider.BOARDS_PATH;
 		
 	
-	
+	private String ListID = "51275ecdf4e4e76920003867";
+	private String BoardID = "51147c16b98fc4036d00b0a1";
 	private String OrganizationID = "51147a54abe641a06d005a7c";
 	private String TrelloKey = "b1ae1192adda1b5b61563d30d7ab403b";
 	private String TrelloToken = "b1853ab88c26b6c42bcdfe46e218a0441d0ebc390961695de3f93a5053a1ed8b";
 
-	private String SyncURL = "https://api.trello.com/1/organizations/" + OrganizationID + "/boards?key=" + TrelloKey + "&token=" + TrelloToken + "&actions=createBoard&actions_since=";
-	
-	public BoardsHandler(Context applicationContext) {
+	private String SyncURL = "https://api.trello.com/1/board/" + BoardID + "/actions?key=" + TrelloKey + "&token=" + TrelloToken + "&filter=createCard,updateCard&since=";
+
+	public CardsHandler(Context applicationContext) {
 		if(applicationContext == null){
-			Log.d("BoardsHandler", "null context");
+			Log.d("CardsHandler", "null context");
 		} else {
 			AppContext = applicationContext;
 		}
@@ -66,9 +67,9 @@ public class BoardsHandler {
 	
 	public void handle(Bundle data){
 		
-		Log.d("BoardsHandler", "handing data");
+		Log.d("CardsHandler", "handing data");
 		if(data == null){
-			Log.d("BoardsHandler", "null data");
+			Log.d("CardsHandler", "null data");
 		}
 		if(data.containsKey("request")){
 			if(data.getString("request").contentEquals("push")){
@@ -108,15 +109,16 @@ public class BoardsHandler {
 			//New, add to trello, update org id to new trello id
 			new Thread(new Runnable() {
 				public void run() {
-					Log.d("BoardsHandler", "New board sent to trello, name:" + name);
+					Log.d("CardsHandler", "New board sent to trello, name:" + name);
 					HttpClient client = new DefaultHttpClient();
 					HttpPost post = new HttpPost(
-							"https://api.trello.com/1/boards");
+							"https://api.trello.com/1/cards");
 					List<BasicNameValuePair> results = new ArrayList<BasicNameValuePair>();
 					
 					results.add(new BasicNameValuePair("key",TrelloKey));
 					results.add(new BasicNameValuePair("token",TrelloToken));
 					results.add(new BasicNameValuePair("idOrganization",OrganizationID));
+					results.add(new BasicNameValuePair("idList",ListID));					
 					
 					if(name != null) results.add(new BasicNameValuePair("name", name));
 					if(desc != null) results.add(new BasicNameValuePair("desc", desc));
@@ -126,7 +128,7 @@ public class BoardsHandler {
 								results));
 					} catch (UnsupportedEncodingException e) {
 						// Auto-generated catch block
-						Log.e("BoardsHandler","An error has occurred", e);
+						Log.e("CardsHandler","An error has occurred", e);
 					}
 					try {
 						HttpResponse response = client
@@ -143,7 +145,7 @@ public class BoardsHandler {
 							e.printStackTrace();
 						}
 						
-						Log.d("BoardsHandler", "Add Response:" + result);
+						Log.d("CardsHandler", "Add Response:" + result);
 						JSONObject json;
 						String newId = null;
 						try {
@@ -152,7 +154,8 @@ public class BoardsHandler {
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
-						if (newId != null) {							
+						//Dont do this yet
+						if (newId != null && false) {							
 							//Update new id and synced in internal db
 							Uri boardUri = Uri.parse(BoardsURI + "/" + org_trello_id);
 							ContentValues values = new ContentValues();
@@ -175,7 +178,7 @@ public class BoardsHandler {
 						}
 						
 					} catch (ClientProtocolException e) {
-						Log.e("BoardsHandler","client protocol exception", e);
+						Log.e("CardsHandler","client protocol exception", e);
 					} catch (IOException e) {
 						Log.e("Log Thread", "io exception", e);
 					}
@@ -216,7 +219,7 @@ public class BoardsHandler {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						Log.d("BoardsHandler", "Update Response:" + result);
+						Log.d("CardsHandler", "Update Response:" + result);
 					} catch (Exception e) {
 						// Auto-generated catch block
 						Log.e("Log Thread",
@@ -245,7 +248,7 @@ public class BoardsHandler {
 	}
 	
 	private void PushRequest(Bundle data){
-		Log.d("BoardsHandler", "Push Request");
+		Log.d("CardsHandler", "Push Request");
 		
 		String trello_id = data.getString("id");
 		String ownerPackage = data.getString("owner"); //Package name of where the data is stored
@@ -276,13 +279,13 @@ public class BoardsHandler {
 		}
 		
 		if(update){
-			Log.d("BoardsHandler", "Updating in db");
+			Log.d("CardsHandler", "Updating in db");
 			//Update in database
 			values.put(BoardsTable.COL_SYNCED, 0);
 			//NEED DATE
 			AppContext.getContentResolver().update(boardUri, values, null, null);
 		} else {
-			Log.d("BoardsHandler", "Adding to db");
+			Log.d("CardsHandler", "Adding to db");
 			//Add to database
 			values.put(BoardsTable.COL_SYNCED, 0);
 			values.put(BoardsTable.COL_TRELLO_ID, trello_id);
@@ -390,7 +393,7 @@ public class BoardsHandler {
     				    		
 	    		//Add in internal database and send to intent to owner	  
     			if(keyword){
-    				Log.d("BoardsHandler", "Matched keyword, sending intent to owner");
+    				Log.d("CardsHandler", "Matched keyword, sending intent to owner");
     				
     				//Send intent to owner to update data
     				Intent sendIntent = new Intent();
@@ -407,7 +410,7 @@ public class BoardsHandler {
     				sendIntent.putExtras(extras);
     				AppContext.startService(sendIntent);
     			} else {
-    				Log.d("BoardsHandler", "No owner found for board, skipping.");
+    				Log.d("CardsHandler", "No owner found for board, skipping.");
     			}
 	    		
 	    	}  
@@ -422,7 +425,7 @@ public class BoardsHandler {
 	            do {
     				if(cursor2.getInt(cursor2.getColumnIndex(BoardsTable.COL_SYNCED)) == 0){
     					String trello_id =  cursor2.getString(cursor2.getColumnIndex(BoardsTable.COL_TRELLO_ID));
-    					Log.d("BoardsHandler","Asking for data of: " + trello_id);
+    					Log.d("CardsHandler","Asking for data of: " + trello_id);
     					Intent sendIntent = new Intent();
     					Bundle extras = new Bundle();
     					extras.putString("request", "data");

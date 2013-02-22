@@ -39,8 +39,9 @@ public class Browser extends Activity {
 		if(todo.getBooleanExtra("Setup", false)){
 			//Go to trello signup screen
 			browser.loadUrl("https://trello.com/signup");
+		} else {
+			browser.loadUrl("https://www.google.com");
 		}
-		//browser.loadUrl("https://google.com");
 	}
 	
 	private class APIKeyHandler extends WebChromeClient {

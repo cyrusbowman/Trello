@@ -3,6 +3,16 @@
 
     <string name="app_name">Trello</string>
     <string name="hello_world">Hello world!</string>
-    <string name="menu_settings">Settings</string>
-
+    <string name="no_name">No Name</string>
+    
+    <string name="menu_settings">Logout of Google</string>
+    
+<!--     OrganizationsList -->  
+	<string name="OrganizationsListTitle">Select a organization to sync with</string>
+    <string name="menu_addOrganization">Add Organization</string>
+    
+<!--     AppsList -->
+	<string name="AppsListTitle">Apps available for Trello syncing</string>
+    <string name="app_sync">Allow Syncing</string>
+    
 </resources>
