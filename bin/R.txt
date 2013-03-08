@@ -42,14 +42,15 @@ int layout list_view 0x7f030003
 int layout organization 0x7f030004
 int menu activity_main 0x7f080000
 int menu organizations_list 0x7f080001
-int string AppsListTitle 0x7f060006
-int string OrganizationsListTitle 0x7f060004
+int string AppsListTitle 0x7f060007
+int string OrganizationsListTitle 0x7f060005
 int string app_name 0x7f060000
-int string app_sync 0x7f060007
-int string hello_world 0x7f060001
-int string menu_addOrganization 0x7f060005
-int string menu_settings 0x7f060003
-int string no_name 0x7f060002
+int string app_sync 0x7f060008
+int string hello_world 0x7f060002
+int string menu_addOrganization 0x7f060006
+int string menu_settings 0x7f060004
+int string no_name 0x7f060003
+int string trello_compatiable 0x7f060001
 int style AppBaseTheme 0x7f070000
 int style AppTheme 0x7f070001
 int[] styleable SlideLayout { 0x7f010000, 0x7f010001 }

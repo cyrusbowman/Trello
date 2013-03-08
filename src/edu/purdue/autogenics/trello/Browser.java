@@ -1,0 +1,235 @@
+package edu.purdue.autogenics.trello;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import edu.purdue.autogenics.trello.R;
+import edu.purdue.autogenics.trello.database.DatabaseHandler;
+import edu.purdue.autogenics.trello.database.LoginsTable;
+
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.app.Activity;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.webkit.ConsoleMessage;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+
+
+public class Browser extends Activity {
+
+	WebView browser = null;
+	private static final String magicString = "25az225MAGICee4587da";
+	private SQLiteDatabase database;
+	private DatabaseHandler dbHandler;
+	
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.browser);
+		//Get database helper
+		dbHandler = new DatabaseHandler(this);
+		
+		browser = (WebView) findViewById(R.id.browser);
+		browser.getSettings().setJavaScriptEnabled(true);
+		
+		//Remove cookies to logout of trello and google
+		//android.webkit.CookieManager.getInstance().removeSessionCookie();
+		//android.webkit.CookieManager.getInstance().removeAllCookie();
+		
+		browser.setWebChromeClient(new PageHandler(this));
+		browser.setWebViewClient(new WebViewClient() {
+			public void onPageFinished(WebView view, String address){
+				view.loadUrl("javascript:console.log('"+magicString+"'+'"+address+" - '+document.getElementsByTagName('html')[0].innerHTML);");
+			}
+		});		
+		Intent todo = getIntent();
+		if(todo.getBooleanExtra("Setup", false)){
+			//Go to trello signup screen
+			browser.loadUrl("https://trello.com/signup");
+		} else {
+			browser.loadUrl("https://www.google.com");
+		}
+	}
+	
+	private class APIKeyHandler extends WebChromeClient {
+		WebView apiBrowser = null;
+		String apiKey = null;
+		String token = null;
+		String secret = null;
+		String name = null;
+		String username = null;
+		
+		Context appContext = null;
+		
+		public APIKeyHandler(WebView theBrowser, Context theContext, String Name, String Username){
+			apiBrowser = theBrowser;
+			appContext = theContext;
+			name = Name;
+			username = Username;
+		}
+		public boolean onConsoleMessage(ConsoleMessage cmsg){
+			if(cmsg.message().startsWith(magicString)){
+				
+				String categoryMsg = cmsg.message().substring(magicString.length());
+				if(categoryMsg.startsWith("KEY")){
+					String msg = categoryMsg.substring(3);
+					apiKey = msg;
+					
+					logMessage("The key: " + msg);
+				} else if (categoryMsg.startsWith("SECRET")){
+					String msg = categoryMsg.substring(6);
+					secret = msg;
+					
+					logMessage("The secret: " + msg);
+				} else if (categoryMsg.startsWith("TOKEN")){
+					//After we automatically approve
+					String msg = categoryMsg.substring(5);
+					token = msg;
+					logMessage("The token: " + msg);
+				}
+				if(apiKey!= null && secret != null && token == null){
+					//Request the token
+					apiBrowser.setWebViewClient(new WebViewClient() {
+						public void onPageFinished(WebView view, String address){
+							//Setup what to do after we approve
+							apiBrowser.setWebViewClient(new WebViewClient() {
+								public void onPageFinished(WebView view, String address){
+									//Save the token
+									view.loadUrl("javascript:console.log('"+magicString+"'+'TOKEN'+document.getElementsByTagName('pre')[0].innerHTML);");
+								}
+							});
+							
+							//Auto approve
+							view.loadUrl("javascript:document.getElementsByTagName('form')[0].approve.click();");
+						}
+					});
+					//Ask for approve of Application
+					apiBrowser.loadUrl("https://trello.com/1/authorize?key="+
+							apiKey+"&name=Test+Create+Trello&expiration=never&response_type=token&scope=read,write");
+				}
+				if(apiKey != null && secret != null && token != null){
+					//Have all API keys
+					//TODO store in database LOGINS table
+					if(username != null && name != null){
+						database = dbHandler.getWritableDatabase();
+						ContentValues values = new ContentValues();
+						values.put(LoginsTable.COL_NAME, name);
+						values.put(LoginsTable.COL_USERNAME, username);
+						values.put(LoginsTable.COL_APIKEY, apiKey);
+						values.put(LoginsTable.COL_SECRET, secret);
+						values.put(LoginsTable.COL_TOKEN, token);
+						long loginId = database.insert(LoginsTable.TABLE_NAME, null, values);
+						dbHandler.close();
+						//Save last login id to preferences
+						SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+						SharedPreferences.Editor editor = prefs.edit();
+						editor.putLong("LastLoginId", loginId);
+						
+						editor.putString("apiKey", apiKey.trim()); //Temp
+						editor.putString("token", token.trim()); //Temp
+						editor.commit();
+						logMessage("Saved login to database Name:" + name + " Username:" + username + " Id:" + Long.toString(loginId));
+					}
+					
+					//Go to organization list
+					Intent go = new Intent(appContext, OrganizationsList.class);
+					startActivity(go);
+				}
+				return true;
+			}
+			return false;
+		}
+	}
+	
+	
+	private class PageHandler extends WebChromeClient {
+		Context appContext = null;
+		String username = null;
+		String name = null;
+		public PageHandler(Context theContext){
+			appContext = theContext;
+		}
+		
+		public boolean onConsoleMessage(ConsoleMessage cmsg){
+			if(cmsg.message().startsWith(magicString)){
+				String categoryMsg = cmsg.message().substring(magicString.length());
+				if(categoryMsg.contains("https://trello.com/ - ")){
+					Integer intStartTitle = categoryMsg.indexOf("<title>", 0);
+					Integer intEndTitle = categoryMsg.indexOf("</title>", intStartTitle);
+					String title = categoryMsg.substring(intStartTitle + "<title>".length(), intEndTitle);
+					logMessage(title);
+					//Got name and username, try to find API key's
+					//TODO store/look in database
+					Pattern pattern = Pattern.compile("^(.* )[(](.*)[)]");
+					Matcher matcher = pattern.matcher(title);
+					if (matcher.find())
+					{
+						name = matcher.group(1);
+						username = matcher.group(2);
+					}
+					
+					//Done loading get API KEY's if needed
+					WebView apiBrowswer = new WebView(getApplicationContext());
+					apiBrowswer.getSettings().setJavaScriptEnabled(true);
+					apiBrowswer.setWebChromeClient(new APIKeyHandler(apiBrowswer, appContext, name, username));
+					apiBrowswer.setWebViewClient(new WebViewClient() {
+						public void onPageFinished(WebView view, String address){
+							view.loadUrl("javascript:console.log('"+magicString+"'+'KEY'+document.getElementById('key').value);" +
+									"console.log('"+magicString+"'+'SECRET'+document.getElementById('secret').value);");
+						}
+					});
+					//Load api key page
+					apiBrowswer.loadUrl("https://trello.com/1/appKey/generate");
+				}
+				return true;
+			}
+			return false;
+		}
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		if(event.getAction() == KeyEvent.ACTION_DOWN){
+            switch(keyCode)
+            {
+            case KeyEvent.KEYCODE_BACK:
+                if(browser.canGoBack() == true){
+                	browser.goBack();
+                }else{
+                    finish();
+                }
+                return true;
+            }
+
+        }
+		return super.onKeyDown(keyCode, event);
+	}
+
+	
+	public void logMessage(String msg){
+		if (msg.length() > 4000) {
+		    Log.v("Trello", "sb.length = " + msg.length());
+		    int chunkCount = msg.length() / 4000;     // integer division
+		    for (int i = 0; i < chunkCount; i++) {
+		        int max = 4000 * (i + 1);
+		        if (max >= msg.length()) {
+		            Log.v("Trello", "chunk " + (i+1) + " of " + chunkCount + ":" + msg.substring(4000 * i));
+		        } else {
+		            Log.v("Trello", "chunk " + (i+1) + " of " + chunkCount + ":" + msg.substring(4000 * i, max));
+		        }
+		    }
+		} else {
+			Log.v("Trello", msg);
+		}
+	}
+}
