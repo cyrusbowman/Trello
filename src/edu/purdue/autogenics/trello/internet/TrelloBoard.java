@@ -1,23 +1,24 @@
 package edu.purdue.autogenics.trello.internet;
 
-public class TrelloList {
+public class TrelloBoard {
 	private String id;
 	private String name;
-	private String board_id;
+	private String desc;
 	
 	private String name_keyword;
+	private String desc_keyword;
 	private String owner;
 	private Integer synced;
-
 	
-	public TrelloList(){
+	public TrelloBoard(){
 		
 	}
-	public TrelloList(String newId, String newName, String newBoardId, String newNameKeyword, String newOwner, Integer newSynced){
+	public TrelloBoard(String newId, String newName, String newDesc, String newNameKeyword, String newDescKeyword, String newOwner, Integer newSynced){
 		setId(newId);
 		setName(newName);
-		setBoardId(newBoardId);
+		setDesc(newDesc);
 		setNameKeyword(newNameKeyword);
+		setDescKeyword(newDescKeyword);
 		setOwner(newOwner);
 		setSynced(newSynced);
 	}
@@ -28,17 +29,20 @@ public class TrelloList {
 	public void setName(String newName){
 		name = newName;
 	}
-	public void setBoardId(String newBoardId){
-		board_id = newBoardId;
+	public void setDesc(String newDesc){
+		desc = newDesc;
+	}
+	public void setSynced(Integer newSynced){
+		synced = newSynced;
 	}
 	public void setNameKeyword(String newNameKeyword){
 		name_keyword = newNameKeyword;
 	}
+	public void setDescKeyword(String newDescKeyword){
+		desc_keyword = newDescKeyword;
+	}
 	public void setOwner(String newOwner){
 		owner = newOwner;
-	}
-	public void setSynced(Integer newSynced){
-		synced = newSynced;
 	}
 	
 	public String getId(){
@@ -47,17 +51,20 @@ public class TrelloList {
 	public String getName(){
 		return name;
 	}
-	public String getBoardId(){
-		return board_id;
+	public String getDesc(){
+		return desc;
+	}
+	public Integer getSynced(){
+		return synced;
 	}
 	public String getNameKeyword(){
 		return name_keyword;
 	}
+	public String getDescKeyword(){
+		return desc_keyword;
+	}
 	public String getOwner(){
 		return owner;
-	}
-	public Integer getSynced(){
-		return synced;
 	}
 	
 }

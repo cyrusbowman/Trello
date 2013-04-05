@@ -75,14 +75,26 @@ public class AppsArrayAdapter extends ArrayAdapter<App> {
 			cursor.close();
 			dbHandler.close();
 			
-			if(isChecked && parentApp.getPackageName().contentEquals("edu.purdue.autogenics.rockapp")){
-				Log.d("Staring now man", "Shabamm");
-				
+			if(isChecked){
+				//Send intent to package to enable trello syncing
+
+				Log.d("Syncing enabled on:", parentApp.getPackageName());
 				Intent sendIntent = new Intent();
 				Bundle extras = new Bundle();
-				extras.putString("MakeBoards", "Nothing Matters");
+				extras.putString("sync", "true");
 				sendIntent.setAction(Intent.ACTION_SEND);
-				sendIntent.setPackage("edu.purdue.autogenics.trello");
+				sendIntent.setPackage(parentApp.getPackageName());
+				sendIntent.putExtras(extras);
+				context.startService(sendIntent);
+			} else {
+				//Send intent to package to disable trello syncing
+
+				Log.d("Syncing disabled on:", parentApp.getPackageName());
+				Intent sendIntent = new Intent();
+				Bundle extras = new Bundle();
+				extras.putString("sync", "false");
+				sendIntent.setAction(Intent.ACTION_SEND);
+				sendIntent.setPackage(parentApp.getPackageName());
 				sendIntent.putExtras(extras);
 				context.startService(sendIntent);
 			}

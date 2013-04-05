@@ -7,17 +7,20 @@ public class TrelloCard {
 	private String list_id;
 	private String date;
 	private String owner;
-	
+	private Integer synced;
+	private Boolean closed = false;
+
 	public TrelloCard(){
 		
 	}
-	public TrelloCard(String newId, String newName, String newDesc, String newListId, String newDate, String newOwner){
+	public TrelloCard(String newId, String newName, String newDesc, String newListId, String newDate, String newOwner, Integer newSynced){
 		setId(newId);
 		setName(newName);
 		setDesc(newDesc);
 		setListId(newListId);
 		setDate(newDate);
 		setOwner(newOwner);
+		setSynced(newSynced);
 	}
 	
 	public void setId(String newId){
@@ -38,6 +41,12 @@ public class TrelloCard {
 	public void setOwner(String newOwner){
 		owner = newOwner;
 	}
+	public void setSynced(Integer newSynced){
+		synced = newSynced;
+	}
+	public void setClosed(Boolean newClosed){
+		closed = newClosed;
+	}
 	
 	public String getId(){
 		return id;
@@ -56,6 +65,12 @@ public class TrelloCard {
 	}
 	public String getOwner(){
 		return owner;
+	}
+	public Integer getSynced(){
+		return synced;
+	}
+	public Boolean getClosed(){
+		return closed;
 	}
 	
 }

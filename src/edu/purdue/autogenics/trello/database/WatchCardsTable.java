@@ -2,24 +2,22 @@ package edu.purdue.autogenics.trello.database;
 
 import android.database.sqlite.SQLiteDatabase;
 
-public class NewListsTable {
+public class WatchCardsTable {
 	// Table name
-	public static final String TABLE_NAME = "new_lists";
+	public static final String TABLE_NAME = "watch_cards";
  
-	 //Table Columns names
-    public static final String COL_ID = "_id"; //Not a trello id, just random UDID
+    // Table Columns names
+    public static final String COL_ID = "_id"; //How to tell if new board or not
+    public static final String COL_KEYWORD = "keyword";
+    public static final String COL_LIST_ID = "list_id";
     public static final String COL_OWNER = "owner";
-    public static final String COL_NAME = "name";
-    public static final String COL_NAME_KEYWORD = "name_keyword";
-    public static final String COL_BOARD_ID = "board_id";
     
     private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME 
-    		+ "(" 
+    		+ " (" 
             + COL_ID + " VARCHAR(50) PRIMARY KEY," 
-            + COL_OWNER + " VARCHAR(200)," //Package name of where the data is stored
-            + COL_NAME + " VARCHAR(50),"
-            + COL_NAME_KEYWORD + " VARCHAR(50),"
-            + COL_BOARD_ID + " VARCHAR(50)"
+    		+ COL_KEYWORD + " VARCHAR(200),"
+            + COL_LIST_ID + " VARCHAR(50),"
+            + COL_OWNER + " VARCHAR(200)"
     		+ ")";
     
     // Creating Tables

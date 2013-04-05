@@ -13,8 +13,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import edu.purdue.autogenics.trello.OrganizationsList;
-import edu.purdue.autogenics.libcommon.trello.Board;
-import edu.purdue.autogenics.libcommon.trello.Organization;
 
 public class OrganizationsHandler extends CommonLibrary {
 	
@@ -22,10 +20,10 @@ public class OrganizationsHandler extends CommonLibrary {
 	private String TrelloToken = null;
 	private String FindOrganizations = null;
 	
-	private List<Organization> organizationList = null;
+	private List<TrelloOrganization> organizationList = null;
 	private OrganizationsList parent;
 	
-	public OrganizationsHandler(Context parent, List<Organization> Organizations, String key, String token) {
+	public OrganizationsHandler(Context parent, List<TrelloOrganization> Organizations, String key, String token) {
 		organizationList = Organizations;
 		this.parent = (OrganizationsList) parent;
 		
@@ -83,12 +81,12 @@ public class OrganizationsHandler extends CommonLibrary {
 				
 				JSONObject orgo = null;
 				
-				Organization newOrg = null;
+				TrelloOrganization newOrg = null;
 				
 				try {
 					orgo = organizations.getJSONObject(i);
 					
-					newOrg = new Organization(); 
+					newOrg = new TrelloOrganization(); 
 					
 					newOrg.setId(orgo.getString("id"));
 					newOrg.setName(orgo.getString("name"));
@@ -99,7 +97,7 @@ public class OrganizationsHandler extends CommonLibrary {
 					for(int x=0; x < boards.length(); x++){
 						String curBoardId = boards.getString(x);
 						
-						Board newBoard = new Board();
+						TrelloBoard newBoard = new TrelloBoard();
 						newBoard.setId(curBoardId);
 						
 						newOrg.addBoard(newBoard);

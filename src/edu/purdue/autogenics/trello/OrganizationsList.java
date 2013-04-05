@@ -3,8 +3,8 @@ package edu.purdue.autogenics.trello;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.purdue.autogenics.libcommon.trello.Organization;
 import edu.purdue.autogenics.trello.internet.OrganizationsHandler;
+import edu.purdue.autogenics.trello.internet.TrelloOrganization;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -32,7 +32,7 @@ public class OrganizationsList extends Activity implements OnClickListener, OnIt
 	private Button test = null;
 	
 	private OrganizationsHandler organizationHandler = null;
-	private List<Organization> organizationList = null;
+	private List<TrelloOrganization> organizationList = null;
 	OrganizationArrayAdapter orgoAdapter = null;
 	
 	private boolean loading = false;
@@ -46,7 +46,7 @@ public class OrganizationsList extends Activity implements OnClickListener, OnIt
 		orgoList = (ListView) findViewById(R.id.list_view);
 		
 		//Load organizations
-		organizationList = new ArrayList<Organization>();
+		organizationList = new ArrayList<TrelloOrganization>();
 		
 		orgoAdapter = new OrganizationArrayAdapter(this, R.layout.organization, organizationList);
 		orgoList.setAdapter(orgoAdapter);
@@ -101,7 +101,7 @@ public class OrganizationsList extends Activity implements OnClickListener, OnIt
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
 		//Just move on for now
-		Organization item = (Organization) orgoAdapter.getItem(position);
+		TrelloOrganization item = (TrelloOrganization) orgoAdapter.getItem(position);
 		Log.d("Organization List", "Selected:" + item.getId());
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());

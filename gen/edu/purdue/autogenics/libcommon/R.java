@@ -20,6 +20,7 @@ public final class R {
 	public static final class string {
 		public static final int app_name = 0x7f060000;
 		public static final int trello_compatiable = 0x7f060001;
+		public static final int rockapp_preferences_name = 0x7f060002;
 	}
 	public static final class styleable {
 		public static final int SlideLayout_speed = 0;

@@ -86,16 +86,17 @@ containing a value of this type.
     public static final class string {
         /**      AppsList 
          */
-        public static final int AppsListTitle=0x7f060007;
+        public static final int AppsListTitle=0x7f060008;
         /**      OrganizationsList 
          */
-        public static final int OrganizationsListTitle=0x7f060005;
+        public static final int OrganizationsListTitle=0x7f060006;
         public static final int app_name=0x7f060000;
-        public static final int app_sync=0x7f060008;
-        public static final int hello_world=0x7f060002;
-        public static final int menu_addOrganization=0x7f060006;
-        public static final int menu_settings=0x7f060004;
-        public static final int no_name=0x7f060003;
+        public static final int app_sync=0x7f060009;
+        public static final int hello_world=0x7f060003;
+        public static final int menu_addOrganization=0x7f060007;
+        public static final int menu_settings=0x7f060005;
+        public static final int no_name=0x7f060004;
+        public static final int rockapp_preferences_name=0x7f060002;
         public static final int trello_compatiable=0x7f060001;
     }
     public static final class style {

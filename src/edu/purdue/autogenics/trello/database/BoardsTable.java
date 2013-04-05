@@ -8,7 +8,8 @@ public class BoardsTable {
  
     // Contacts Table Columns names
     public static final String COL_TRELLO_ID = "_id"; //How to tell if new board or not
-    public static final String COL_DATE = "date";
+    public static final String COL_NAME = "name";
+    public static final String COL_DESC = "desc";
     public static final String COL_SYNCED = "synced";
     public static final String COL_OWNER = "owner";
     public static final String COL_LISTS_LAST_SYNC = "lists_last_sync";
@@ -18,7 +19,8 @@ public class BoardsTable {
             + COL_TRELLO_ID + " VARCHAR(50) PRIMARY KEY," 
             + COL_OWNER + " VARCHAR(200)," //Package name of where the data is stored
             + COL_LISTS_LAST_SYNC + " VARCHAR(50),"
-    		+ COL_DATE + " VARCHAR(50),"
+            + COL_NAME + " VARCHAR(50),"
+    		+ COL_DESC + " VARCHAR(500),"
             + COL_SYNCED + " INTEGER"
     		+ ")";
     

@@ -2,7 +2,7 @@ package edu.purdue.autogenics.trello;
 
 import java.util.List;
 
-import edu.purdue.autogenics.libcommon.trello.Organization;
+import edu.purdue.autogenics.trello.internet.TrelloOrganization;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,12 +12,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class OrganizationArrayAdapter extends ArrayAdapter<Organization> {
+public class OrganizationArrayAdapter extends ArrayAdapter<TrelloOrganization> {
 	private final Context context;
-	private List<Organization> organizations = null;
+	private List<TrelloOrganization> organizations = null;
 	private int resId;
 
-	public OrganizationArrayAdapter(Context context, int layoutResourceId, List<Organization> data) {
+	public OrganizationArrayAdapter(Context context, int layoutResourceId, List<TrelloOrganization> data) {
 		super(context, layoutResourceId, data);
 		this.resId = layoutResourceId;
 		this.context = context;

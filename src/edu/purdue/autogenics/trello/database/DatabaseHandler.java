@@ -32,9 +32,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         NewListsTable.onCreate(db);
         NewCardsTable.onCreate(db);
         
-        ListenersTable.onCreate(db);
-        
-        BoardsOwnerFinder.onCreate(db);
+        WatchCardsTable.onCreate(db);
     }
  
     // Upgrading tables
@@ -44,13 +42,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	ListsTable.onUpgrade(db, oldVersion, newVersion);
     	CardsTable.onUpgrade(db, oldVersion, newVersion);
     	
+    	LoginsTable.onUpgrade(db, oldVersion, newVersion);
+    	AppsTable.onUpgrade(db, oldVersion, newVersion);
+    	
     	NewBoardsTable.onUpgrade(db, oldVersion, newVersion);
     	NewListsTable.onUpgrade(db, oldVersion, newVersion);
     	NewCardsTable.onUpgrade(db, oldVersion, newVersion);
     	
-    	LoginsTable.onUpgrade(db, oldVersion, newVersion);
-    	AppsTable.onUpgrade(db, oldVersion, newVersion);
-    	
-    	ListenersTable.onUpgrade(db, oldVersion, newVersion);
+    	WatchCardsTable.onUpgrade(db, oldVersion, newVersion);
     }
 }
