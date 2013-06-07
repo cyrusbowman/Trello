@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants" >
+    
+
+	<ImageView
+        android:id="@+id/member_avatar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/file"/>
+
+	<TextView
+	    android:id="@+id/member_largeText"
+	    android:layout_width="wrap_content"
+	    android:layout_height="24dp"
+	    android:layout_alignParentTop="true"
+	   	android:layout_toRightOf="@+id/member_avatar"
+	    android:textSize="20dp"
+	    android:textStyle="bold"
+	    android:layout_marginLeft="8dp"
+	    android:layout_marginTop="12dp"
+	    android:text="Cyrus Bowman"
+	    />
+	<TextView
+	    android:id="@+id/member_smallText"
+	    android:layout_width="wrap_content"
+	    android:layout_height="18dp"
+	    android:layout_below="@+id/member_largeText"
+	    android:layout_toRightOf="@+id/member_avatar"
+	    android:textSize="14dp"
+	    android:layout_marginLeft="20dp"
+	    android:layout_marginTop="0dp"
+	    android:text="cyrusbowman"
+	    />
+	
+	<CheckBox 
+	     android:id="@+id/member_checkbox"
+	     android:layout_width="wrap_content"
+         android:layout_height="48dp"
+         android:layout_marginTop="8dp"
+         android:layout_marginRight="8dp"
+         android:textSize="16sp"
+	     android:textStyle="bold"
+         android:layout_alignParentRight="true"
+         android:layout_alignParentTop="true"
+		/>
+    
+</RelativeLayout>

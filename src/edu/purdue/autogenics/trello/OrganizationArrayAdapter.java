@@ -37,13 +37,16 @@ public class OrganizationArrayAdapter extends ArrayAdapter<TrelloOrganization> {
 			row = inflater.inflate(resId, parent, false);
 			holder = new OrganizationHolder();
 			holder.txtTitle = (TextView) row.findViewById(R.id.organizationTitle);
+			holder.imgIcon = (ImageView) row.findViewById(R.id.organizationIcon);
 			row.setTag(holder);
 		} else {
 			holder = (OrganizationHolder) row.getTag();
 		}
 		
 		holder.txtTitle.setText(organizations.get(position).getDisplayName());
-		
+		if(organizations.get(position).getIcon() != null){
+			holder.imgIcon.setImageBitmap(organizations.get(position).getIcon());
+		}
 				//ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
 		// Change the icon for Windows and iPhone
 //		String s = values[position];

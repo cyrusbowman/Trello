@@ -21,34 +21,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Creating tables
     @Override
     public void onCreate(SQLiteDatabase db) {    	
-        BoardsTable.onCreate(db);
-        ListsTable.onCreate(db);
-        CardsTable.onCreate(db);
-        
-        LoginsTable.onCreate(db);
         AppsTable.onCreate(db);
-        
-        NewBoardsTable.onCreate(db);
-        NewListsTable.onCreate(db);
-        NewCardsTable.onCreate(db);
-        
-        WatchCardsTable.onCreate(db);
+        LoginsTable.onCreate(db);
     }
  
     // Upgrading tables
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-    	BoardsTable.onUpgrade(db, oldVersion, newVersion);
-    	ListsTable.onUpgrade(db, oldVersion, newVersion);
-    	CardsTable.onUpgrade(db, oldVersion, newVersion);
-    	
-    	LoginsTable.onUpgrade(db, oldVersion, newVersion);
     	AppsTable.onUpgrade(db, oldVersion, newVersion);
-    	
-    	NewBoardsTable.onUpgrade(db, oldVersion, newVersion);
-    	NewListsTable.onUpgrade(db, oldVersion, newVersion);
-    	NewCardsTable.onUpgrade(db, oldVersion, newVersion);
-    	
-    	WatchCardsTable.onUpgrade(db, oldVersion, newVersion);
+    	LoginsTable.onUpgrade(db, oldVersion, newVersion);
     }
 }

@@ -13,6 +13,10 @@ public class LoginsTable {
     public static final String COL_SECRET = "secret";
     public static final String COL_TOKEN = "token";
     public static final String COL_APIKEY = "apikey";
+    public static final String COL_ACTIVE = "active";
+    public static final String COL_ORGO_ID = "orgo_id";
+    public static final String COL_ORGO_NAME = "orgo_name";
+
     
     private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME 
     		+ " (" 
@@ -21,7 +25,10 @@ public class LoginsTable {
     		+ COL_USERNAME + " VARCHAR(50),"
     		+ COL_SECRET + " VARCHAR(50),"
     		+ COL_TOKEN + " VARCHAR(50),"
-    		+ COL_APIKEY + " VARCHAR(50)"
+    		+ COL_APIKEY + " VARCHAR(50),"
+    		+ COL_ACTIVE + " INTEGER,"
+    		+ COL_ORGO_ID + " VARCHAR(50),"
+    		+ COL_ORGO_NAME + " VARCHAR(50)"
     		+ ")";
     
     // Creating Tables

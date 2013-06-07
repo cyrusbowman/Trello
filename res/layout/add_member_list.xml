@@ -1,0 +1,29 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MembersList"
+    android:background="#E0E0E0" >
+
+    <EditText 
+        android:id="@+id/member_search"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:textSize="20sp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="#FFFFFF"
+        android:hint="@string/add_member_list_search"
+        />
+	<ListView
+	    android:id="@+id/add_member_list_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/member_search" />
+	
+</RelativeLayout>

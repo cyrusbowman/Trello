@@ -12,6 +12,10 @@ public class App {
 	private Boolean syncThisApp = false;
 	private Boolean installed = false;
 	
+	private Integer autoSync = null;
+	private String lastSync = null;
+	private String boardName = null;
+
 	public App() {
 	
 	}
@@ -31,6 +35,30 @@ public class App {
 		if(Name != null) setName(Name);
 		if(Description != null) setDesc(Description);
 		if(Icon != null) setIcon(Icon);
+	}
+	
+	public Integer getAutoSync() {
+		return autoSync;
+	}
+
+	public String getLastSync() {
+		return lastSync;
+	}
+
+	public String getBoardName() {
+		return boardName;
+	}
+
+	public void setAutoSync(Integer autoSync) {
+		this.autoSync = autoSync;
+	}
+
+	public void setLastSync(String lastSync) {
+		this.lastSync = lastSync;
+	}
+
+	public void setBoardName(String boardName) {
+		this.boardName = boardName;
 	}
 	
 	public void setId(Long newId){
@@ -54,6 +82,7 @@ public class App {
 	public void setIcon(Drawable newIcon){
 		icon = newIcon;
 	}
+	
 	
 	public Long getId(){
 		return id;

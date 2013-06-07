@@ -1,12 +1,25 @@
 package edu.purdue.autogenics.trello;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 
 import edu.purdue.autogenics.trello.R;
 import edu.purdue.autogenics.trello.database.DatabaseHandler;
 import edu.purdue.autogenics.trello.database.LoginsTable;
+import edu.purdue.autogenics.trello.internet.CommonLibrary;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.Activity;
@@ -14,50 +27,72 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.ConsoleMessage;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 
 
 public class Browser extends Activity {
 
 	WebView browser = null;
+	private TextView tv_loading = null;
 	private static final String magicString = "25az225MAGICee4587da";
 	private SQLiteDatabase database;
 	private DatabaseHandler dbHandler;
-	
+	private String todo = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.browser);
+		Bundle extras = getIntent().getExtras();
+		if(extras != null){
+			todo = extras.getString("todo");
+		}
+		if(todo != null && todo.contentEquals("add_account")){
+			this.setTitle(R.string.add_member_list_topbar);
+		} else if(todo != null && todo.contentEquals("change_account")) {
+			this.setTitle(R.string.login_change_account);
+		} else {
+			this.setTitle(R.string.activity_main_topbar);
+		}
+		
 		//Get database helper
 		dbHandler = new DatabaseHandler(this);
 		
 		browser = (WebView) findViewById(R.id.browser);
+		tv_loading = (TextView) findViewById(R.id.browser_loading);
 		browser.getSettings().setJavaScriptEnabled(true);
 		
 		//Remove cookies to logout of trello and google
-		//android.webkit.CookieManager.getInstance().removeSessionCookie();
-		//android.webkit.CookieManager.getInstance().removeAllCookie();
+		android.webkit.CookieManager.getInstance().removeSessionCookie();
+		android.webkit.CookieManager.getInstance().removeAllCookie();
 		
 		browser.setWebChromeClient(new PageHandler(this));
 		browser.setWebViewClient(new WebViewClient() {
+			
+			@Override
+			public void onPageStarted(WebView view, String url, Bitmap favicon) {
+				// TODO Auto-generated method stub
+				super.onPageStarted(view, url, favicon);
+				tv_loading.setVisibility(View.VISIBLE);
+				browser.setVisibility(View.GONE);
+			}
+
 			public void onPageFinished(WebView view, String address){
 				view.loadUrl("javascript:console.log('"+magicString+"'+'"+address+" - '+document.getElementsByTagName('html')[0].innerHTML);");
 			}
 		});		
-		Intent todo = getIntent();
-		if(todo.getBooleanExtra("Setup", false)){
-			//Go to trello signup screen
-			browser.loadUrl("https://trello.com/signup");
-		} else {
-			browser.loadUrl("https://www.google.com");
-		}
+		//Go to trello signup screen
+		browser.loadUrl("https://trello.com/signup");
 	}
 	
 	private class APIKeyHandler extends WebChromeClient {
@@ -118,26 +153,50 @@ public class Browser extends Activity {
 				}
 				if(apiKey != null && secret != null && token != null){
 					//Have all API keys
-					//TODO store in database LOGINS table
+					//Store in database LOGINS table
 					if(username != null && name != null){
 						database = dbHandler.getWritableDatabase();
+						
+						//Look for username in database
+						Long foundId = null;
+						String[] columns = { LoginsTable.COL_ID, LoginsTable.COL_USERNAME};
+						Cursor cursor = database.query(LoginsTable.TABLE_NAME, columns, null, null,null, null, null);
+					    if(cursor.moveToFirst()) {	    	
+					    	foundId = cursor.getLong(cursor.getColumnIndex(LoginsTable.COL_ID));
+					    }
+					    cursor.close();
+						
+						//Update all others to inactive
+						ContentValues updateValues = new ContentValues();
+						updateValues.put(LoginsTable.COL_ACTIVE, 0);
+						String where = LoginsTable.COL_ACTIVE + " = 1";
+						database.update(LoginsTable.TABLE_NAME, updateValues, where, null);
+						
 						ContentValues values = new ContentValues();
 						values.put(LoginsTable.COL_NAME, name);
 						values.put(LoginsTable.COL_USERNAME, username);
 						values.put(LoginsTable.COL_APIKEY, apiKey);
 						values.put(LoginsTable.COL_SECRET, secret);
 						values.put(LoginsTable.COL_TOKEN, token);
-						long loginId = database.insert(LoginsTable.TABLE_NAME, null, values);
+						values.put(LoginsTable.COL_ACTIVE, 1);
+						if(foundId == null){
+							//Insert new as active
+							foundId = database.insert(LoginsTable.TABLE_NAME, null, values);
+						} else {
+							//Update this id to active
+							String where2 = LoginsTable.COL_ID + " = " + Long.toString(foundId);
+							database.update(LoginsTable.TABLE_NAME, values, where2, null);
+						}
 						dbHandler.close();
 						//Save last login id to preferences
 						SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 						SharedPreferences.Editor editor = prefs.edit();
-						editor.putLong("LastLoginId", loginId);
+						editor.putLong("LastLoginId", foundId);
 						
 						editor.putString("apiKey", apiKey.trim()); //Temp
 						editor.putString("token", token.trim()); //Temp
 						editor.commit();
-						logMessage("Saved login to database Name:" + name + " Username:" + username + " Id:" + Long.toString(loginId));
+						logMessage("Saved login to database Name:" + name + " Username:" + username + " Id:" + Long.toString(foundId));
 					}
 					
 					//Go to organization list
@@ -167,8 +226,7 @@ public class Browser extends Activity {
 					Integer intEndTitle = categoryMsg.indexOf("</title>", intStartTitle);
 					String title = categoryMsg.substring(intStartTitle + "<title>".length(), intEndTitle);
 					logMessage(title);
-					//Got name and username, try to find API key's
-					//TODO store/look in database
+					//Got name and username, get API keys if needed
 					Pattern pattern = Pattern.compile("^(.* )[(](.*)[)]");
 					Matcher matcher = pattern.matcher(title);
 					if (matcher.find())
@@ -176,19 +234,35 @@ public class Browser extends Activity {
 						name = matcher.group(1);
 						username = matcher.group(2);
 					}
-					
+
 					//Done loading get API KEY's if needed
-					WebView apiBrowswer = new WebView(getApplicationContext());
-					apiBrowswer.getSettings().setJavaScriptEnabled(true);
-					apiBrowswer.setWebChromeClient(new APIKeyHandler(apiBrowswer, appContext, name, username));
-					apiBrowswer.setWebViewClient(new WebViewClient() {
-						public void onPageFinished(WebView view, String address){
-							view.loadUrl("javascript:console.log('"+magicString+"'+'KEY'+document.getElementById('key').value);" +
-									"console.log('"+magicString+"'+'SECRET'+document.getElementById('secret').value);");
+					if(todo != null && todo.contentEquals("add_account")){
+						//Add this user to organization
+						SharedPreferences prefs = PreferenceManager
+								.getDefaultSharedPreferences(getApplicationContext());
+						String orgoId = prefs.getString("organizationId", null);
+						String apiKey = prefs.getString("apiKey", null);
+						String token = prefs.getString("token", null);
+						
+						if(orgoId !=  null && apiKey != null && token != null){
+							new asyncAddMemberOnTrello().execute(username, apiKey, token, orgoId);
 						}
-					});
-					//Load api key page
-					apiBrowswer.loadUrl("https://trello.com/1/appKey/generate");
+					} else {
+						WebView apiBrowswer = new WebView(getApplicationContext());
+						apiBrowswer.getSettings().setJavaScriptEnabled(true);
+						apiBrowswer.setWebChromeClient(new APIKeyHandler(apiBrowswer, appContext, name, username));
+						apiBrowswer.setWebViewClient(new WebViewClient() {
+							public void onPageFinished(WebView view, String address){
+								view.loadUrl("javascript:console.log('"+magicString+"'+'KEY'+document.getElementById('key').value);" +
+										"console.log('"+magicString+"'+'SECRET'+document.getElementById('secret').value);");
+							}
+						});
+						//Load api key page
+						apiBrowswer.loadUrl("https://trello.com/1/appKey/generate");
+					}
+				} else {
+					tv_loading.setVisibility(View.GONE);
+					browser.setVisibility(View.VISIBLE);
 				}
 				return true;
 			}
@@ -230,6 +304,56 @@ public class Browser extends Activity {
 		    }
 		} else {
 			Log.v("Trello", msg);
+		}
+	}
+	private class asyncAddMemberOnTrello extends AsyncTask<String, Integer, Boolean> {		
+		protected Boolean doInBackground(String... query) {
+			String username = query[0];
+			Log.d("AddMembersHandler - AddMemberOnTrello", "Called");
+			HttpClient client = new DefaultHttpClient();
+			List<BasicNameValuePair> results = new ArrayList<BasicNameValuePair>();
+			results.add(new BasicNameValuePair("key",query[1]));
+			results.add(new BasicNameValuePair("token",query[2]));
+			//Add to orgo
+			HttpPut put = new HttpPut("https://api.trello.com/1/organizations/"+ query[3] +"/members/" + username);
+			results.add(new BasicNameValuePair("type","normal"));
+			try {
+				String result = "";
+				try {
+					put.setEntity(new UrlEncodedFormEntity(results));
+					HttpResponse response = client.execute(put);
+					// Error here if no Internet TODO
+					InputStream is = response.getEntity().getContent(); 
+					result = CommonLibrary.convertStreamToString(is);
+				} catch (IllegalStateException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				Log.d("AddMembersHandler - AddMemberOnTrello", "Add Response:" + result);
+			} catch (Exception e) {
+				// Auto-generated catch block
+				Log.e("AddMembersHandler - AddMemberOnTrello","client protocol exception", e);
+			}
+			return true; //TODO return null on failure
+		}
+		
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			super.onProgressUpdate(values);
+		}
+
+		protected void onPostExecute(Boolean success) {
+			if(success) {
+				//Completed success add it
+				//Go back to MembersList
+				Intent go = new Intent(getApplicationContext(), MembersList.class);
+				startActivity(go);
+			} else {
+				//TODO failed
+				//Toast toast = Toast.makeText(parent, parent.getString(R.string.member_list_remove_failed), Toast.LENGTH_LONG);
+				//toast.show();
+			}
 		}
 	}
 }

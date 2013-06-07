@@ -1,7 +1,6 @@
 package edu.purdue.autogenics.trello.internet;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.graphics.Bitmap;
 
 
 public class TrelloOrganization {
@@ -9,52 +8,38 @@ public class TrelloOrganization {
 	private String name = null;
 	private String displayName = null;
 	private String desc = null;
-	
-	private List<TrelloBoard> boards = null;
+	private Bitmap icon = null;
+
 	
 	public TrelloOrganization() {
 	
 	}
 	
-	public TrelloOrganization(String ID, String Name, String DisplayName, String Description) {
+	public TrelloOrganization(String ID, String Name, String DisplayName, String Description, Bitmap icon) {
 		if(ID != null) setId(ID);
 		if(Name != null) setName(Name);
 		if(DisplayName != null) setDisplayName(DisplayName);
 		if(Description != null) setDesc(Description);
-		boards = new ArrayList<TrelloBoard>();
+		if(icon != null) setIcon(icon);
 	}
 	
 	public void setId(String newId){
 		id = newId;
 	}
-	public void setName(String newName){
-		name = newName;
-	}
-	public void setDisplayName(String newName){
-		displayName = newName;
-	}
-	public void setDesc(String newDesc){
-		desc = newDesc;
-	}
-	
-	public void addBoard(TrelloBoard newBoard){
-		if(newBoard != null){
-			//boards.add(newBoard); TODO
-		}
-	}
-	
 	public String getId(){
 		return id;
 	}
 	
-	public List<TrelloBoard>getBoards(){
-		return boards;
+	public void setName(String name){
+		this.name = name;
+	}
+	public String getName(){
+		return name;
 	}
 	
-	public TrelloBoard getBoard(int Index){
-		return boards.get(Index);
+	public void setDisplayName(String displayName){
+		this.displayName = displayName;
 	}
-	
 	public String getDisplayName(){
 		if(displayName == null){
 			return "No Name";
@@ -62,4 +47,19 @@ public class TrelloOrganization {
 			return displayName;
 		}
 	}
+	
+	public void setDesc(String desc){
+		this.desc = desc;
+	}
+	public String getDesc(){
+		return desc;
+	}
+	
+	public void setIcon(Bitmap icon){
+		this.icon = icon;
+	}
+	public Bitmap getIcon(){
+		return icon;
+	}
+
 }

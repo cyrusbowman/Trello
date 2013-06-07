@@ -8,6 +8,20 @@
         android:id="@+id/browser"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:visibility="gone"
         />
+    
+     <TextView 
+        android:id="@+id/browser_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Loading..."
+        android:textSize="16sp"
+        android:layout_marginLeft="8dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="visible"
+    />
 
 </RelativeLayout>

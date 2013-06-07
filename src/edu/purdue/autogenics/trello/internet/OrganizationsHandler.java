@@ -10,15 +10,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 import edu.purdue.autogenics.trello.OrganizationsList;
+import edu.purdue.autogenics.trello.R;
 
 public class OrganizationsHandler extends CommonLibrary {
 	
 	private String TrelloKey = null;
 	private String TrelloToken = null;
 	private String FindOrganizations = null;
+	
+	private Bitmap defaultIcon = null;
+	private Bitmap addIcon = null;
 	
 	private List<TrelloOrganization> organizationList = null;
 	private OrganizationsList parent;
@@ -30,6 +36,9 @@ public class OrganizationsHandler extends CommonLibrary {
 		FindOrganizations =  "https://trello.com/1/members/my/organizations?key=" + key + "&token=" + token;
 		TrelloKey = key;
 		TrelloToken = token;
+		
+		defaultIcon = BitmapFactory.decodeResource(this.parent.getResources(), R.drawable.organization);
+		addIcon = BitmapFactory.decodeResource(this.parent.getResources(), R.drawable.add);
 	}
 	
 	public void getOrganizationsList(){
@@ -73,8 +82,6 @@ public class OrganizationsHandler extends CommonLibrary {
 			
 		}
 
-
-
 		protected void onPostExecute(JSONArray organizations) {
 			// Add these to list
 			for (int i = 0; i < organizations.length(); i++) {
@@ -91,18 +98,8 @@ public class OrganizationsHandler extends CommonLibrary {
 					newOrg.setId(orgo.getString("id"));
 					newOrg.setName(orgo.getString("name"));
 					newOrg.setDisplayName(orgo.getString("displayName"));
-					newOrg.setDesc(orgo.getString("desc"));					
-					
-					JSONArray boards = orgo.getJSONArray("idBoards");
-					for(int x=0; x < boards.length(); x++){
-						String curBoardId = boards.getString(x);
-						
-						TrelloBoard newBoard = new TrelloBoard();
-						newBoard.setId(curBoardId);
-						
-						newOrg.addBoard(newBoard);
-					}
-					
+					newOrg.setDesc(orgo.getString("desc"));	
+					newOrg.setIcon(defaultIcon);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -110,6 +107,15 @@ public class OrganizationsHandler extends CommonLibrary {
 				//Add this organization to the list
 				if(newOrg != null) organizationList.add(newOrg);
 			}			
+			
+			//Add add new button
+			TrelloOrganization newOrg = new TrelloOrganization(); 
+			newOrg.setId(null);
+			newOrg.setName(null);
+			newOrg.setDisplayName(parent.getString(R.string.organizations_list_create));
+			newOrg.setDesc(null);
+			newOrg.setIcon(addIcon);
+			organizationList.add(newOrg);
 			
 			//Notify list that its done loading
 			parent.doneLoadingList();

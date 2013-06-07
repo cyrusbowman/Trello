@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_members_done"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom|withText"
+        android:title="Done"
+        android:layout_gravity="bottom"/>
+  
+    
+</menu>

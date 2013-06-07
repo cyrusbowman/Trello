@@ -11,8 +11,10 @@ import edu.purdue.autogenics.trello.database.AppsTable;
 import edu.purdue.autogenics.trello.database.DatabaseHandler;
 import edu.purdue.autogenics.trello.internet.App;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
@@ -27,11 +29,12 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class AppsList extends Activity implements OnClickListener, OnItemClickListener {	
 	
 	private ListView appsListView = null;
-	
+	private TextView appsOrganizationName = null;
 	private List<App> appsList = null;
 	
 	private boolean loading = false;
@@ -39,36 +42,63 @@ public class AppsList extends Activity implements OnClickListener, OnItemClickLi
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.list_view);
+		setContentView(R.layout.apps_list);
 		
 		this.setTitle(getString(R.string.AppsListTitle));
-		appsListView = (ListView) findViewById(R.id.list_view);
-				
+		appsListView = (ListView) findViewById(R.id.apps_list_view);
+		appsOrganizationName = (TextView) findViewById(R.id.apps_farm);
+		
 		//Load organizations
 		appsList = new ArrayList<App>();
+		
+		getAppList();
+		
+		AppsArrayAdapter adapter = new AppsArrayAdapter(this, R.layout.app, appsList);
+		appsListView.setAdapter(adapter);
+		appsListView.setOnItemClickListener(this);
+	}
+	
+	@Override
+	protected void onResume() {
+		getAppList();
+		((BaseAdapter) appsListView.getAdapter()).notifyDataSetChanged();
+		super.onResume();
+	}
+
+	private void getAppList(){
+		List<App> newAppsList = new ArrayList<App>();
 		
 		//Find all supported apps
 		Intent sendIntent = new Intent();
 		sendIntent.setAction("edu.purdue.autogenics.trello");
 		
 		PackageManager packageManager = getPackageManager();
-		List<ResolveInfo> services = packageManager.queryIntentServices(sendIntent, 0);
+		List<ResolveInfo> services = packageManager.queryIntentActivities(sendIntent, 0);
 		Collections.sort(services, new ResolveInfo.DisplayNameComparator(packageManager));
 		
 		DatabaseHandler dbHandler = new DatabaseHandler(this);
 		SQLiteDatabase database = dbHandler.getWritableDatabase();
-		String[] columns = { AppsTable.COL_ID, AppsTable.COL_NAME, AppsTable.PACKAGE_NAME, AppsTable.COL_ALLOW_SYNCING };
+		
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext());
+		String orgoName = prefs.getString("organizationName", "Unknown");
+		appsOrganizationName.setText(orgoName);
+		
+		String[] columns = { AppsTable.COL_ID, AppsTable.COL_NAME, AppsTable.COL_PACKAGE_NAME, AppsTable.COL_ALLOW_SYNCING, AppsTable.COL_LAST_SYNC, AppsTable.COL_AUTO_SYNC, AppsTable.COL_BOARD_NAME };
 		
 	    List<App> appsInDb = new ArrayList<App>();
-		
+	    
 		Cursor cursor = database.query(AppsTable.TABLE_NAME, columns, null, null,null, null, null);
 	    while (cursor.moveToNext()) {
 	    	Log.d("In Db", "it:" + cursor.getString(cursor.getColumnIndex(AppsTable.COL_NAME)));
-	    	Log.d("In Db", "it:" + cursor.getString(cursor.getColumnIndex(AppsTable.PACKAGE_NAME)));
+	    	Log.d("In Db", "it:" + cursor.getString(cursor.getColumnIndex(AppsTable.COL_PACKAGE_NAME)));
 	    	
 	    	Boolean isSynced = (cursor.getInt(cursor.getColumnIndex(AppsTable.COL_ALLOW_SYNCING)) == 1) ? true : false;
 	    	//Assume uninstalled
-	    	App newApp = new App(cursor.getLong(cursor.getColumnIndex(AppsTable.COL_ID)), isSynced, false, cursor.getString(cursor.getColumnIndex(AppsTable.PACKAGE_NAME)), cursor.getString(cursor.getColumnIndex(AppsTable.COL_NAME)), null, null);
+	    	App newApp = new App(cursor.getLong(cursor.getColumnIndex(AppsTable.COL_ID)), isSynced, false, cursor.getString(cursor.getColumnIndex(AppsTable.COL_PACKAGE_NAME)), cursor.getString(cursor.getColumnIndex(AppsTable.COL_NAME)), null, null);
+	    	newApp.setLastSync(cursor.getString(cursor.getColumnIndex(AppsTable.COL_LAST_SYNC)));
+	    	newApp.setAutoSync(cursor.getInt(cursor.getColumnIndex(AppsTable.COL_AUTO_SYNC)));
+	    	newApp.setBoardName(cursor.getString(cursor.getColumnIndex(AppsTable.COL_BOARD_NAME)));
 	    	appsInDb.add(newApp);
 	    }
 	    cursor.close();
@@ -76,24 +106,28 @@ public class AppsList extends Activity implements OnClickListener, OnItemClickLi
 		
 		if(services != null){
 			 final int count = services.size();
-			 Log.d("AppsList", Integer.toString(count));
+		    Log.d("AppsList - onCreate", "Here 2");
+
+			 Log.d("AppsList - onCreate", Integer.toString(count));
 
             for (int i = 0; i < count; i++) {
 	          	ResolveInfo info = services.get(i);
-	          	
-	          	String packageName = info.serviceInfo.applicationInfo.packageName.toString();
-	          	CharSequence csDesc = info.serviceInfo.applicationInfo.loadDescription(packageManager);
-	          	CharSequence csName = info.serviceInfo.applicationInfo.loadLabel(packageManager);
+	          	String packageName = info.activityInfo.applicationInfo.packageName.toString();
+	          	CharSequence csDesc = info.activityInfo.applicationInfo.loadDescription(packageManager);
+	          	CharSequence csName = info.activityInfo.applicationInfo.loadLabel(packageManager);
 	          	
 	          	String name = (csName == null) ? null : csName.toString();
 	          	String desc = (csDesc == null) ? null : csDesc.toString();
-	          	Drawable icon = info.serviceInfo.applicationInfo.loadIcon(packageManager);
+	          	Drawable icon = info.activityInfo.applicationInfo.loadIcon(packageManager);
 	          	
 	          	Log.d("AppList", "Name:" + name);
 	          	Log.d("AppList", "Package:" + packageName);
 	          	
 	          	Long theId = null;
 	          	Boolean isSynced = null;
+	          	Integer isAutoSynced = 0;
+	          	String lastSynced = null;
+	          	String boardName = null;
 	          	Iterator<App> iterator = appsInDb.iterator();
 	        	while (iterator.hasNext()) {
 	        		App compare = iterator.next();
@@ -101,24 +135,30 @@ public class AppsList extends Activity implements OnClickListener, OnItemClickLi
 	        		if(comparePackageName != null && packageName.contentEquals(comparePackageName)){
 	        			theId = compare.getId();
 	        			isSynced = compare.getSyncApp();
+	        			isAutoSynced = compare.getAutoSync();
+	        			lastSynced = compare.getLastSync();
+	        			boardName = compare.getBoardName();
 	        			iterator.remove(); //Remove this found already
 	        		}
 	        	}
 	          	App newApp = new App(theId, isSynced, true, packageName, name, desc, icon);
-	          	appsList.add(newApp);
+		    	newApp.setAutoSync(isAutoSynced);
+		    	newApp.setInstalled(true);
+		    	newApp.setLastSync(lastSynced);
+		    	newApp.setBoardName(boardName);
+		    	newAppsList.add(newApp);
             }
             //Add ones that arn't installed anymore (only one's left after removing)
             Iterator<App> iterator = appsInDb.iterator();
         	while (iterator.hasNext()) {
         		App compare = iterator.next();
         		compare.setSyncApp(false); //Can't sync anymore
-        		appsList.add(compare);
+        		compare.setInstalled(false); //Can't sync anymore
+        		//newAppsList.add(compare);
         	}
 		}
-		
-		AppsArrayAdapter adapter = new AppsArrayAdapter(this, R.layout.app, appsList);
-		appsListView.setAdapter(adapter);
-		appsListView.setOnItemClickListener(this);
+		appsList.clear();
+		appsList.addAll(newAppsList);
 	}
 	
 	@Override
@@ -129,16 +169,25 @@ public class AppsList extends Activity implements OnClickListener, OnItemClickLi
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
-		getMenuInflater().inflate(R.menu.organizations_list, menu);
+		getMenuInflater().inflate(R.menu.apps_list, menu);
 		return true;
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
-		if(item.getItemId() == R.id.menu_addOrganization){
-			//Show new organization dialog
-			Log.d("Orgo List", "Add organization");
+		if(item.getItemId() == R.id.menu_apps_organization){
+			// Show new app menu
+			Intent go = new Intent(this, OrganizationsList.class);
+			startActivity(go);
+		}  else if(item.getItemId() == R.id.menu_apps_members){
+			// Show new app menu
+			Intent go = new Intent(this, MembersList.class);
+			startActivity(go);
+		} else if(item.getItemId() == R.id.menu_apps_account){
+			// Show new app menu
+			Intent go = new Intent(this, LoginsList.class);
+			startActivity(go);
 		}
 		return false;
 	}

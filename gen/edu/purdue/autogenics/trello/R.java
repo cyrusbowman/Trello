@@ -36,68 +36,153 @@ containing a value of this type.
         public static final int rock_selected_stroke=0x7f050001;
     }
     public static final class drawable {
-        public static final int file=0x7f020000;
-        public static final int folder=0x7f020001;
-        public static final int ic_launcher=0x7f020002;
-        public static final int rock_both=0x7f020003;
-        public static final int rock_down=0x7f020004;
-        public static final int rock_selected=0x7f020005;
-        public static final int rock_shadow=0x7f020006;
-        public static final int rock_up=0x7f020007;
-        public static final int rock_up_down=0x7f020008;
+        public static final int add=0x7f020000;
+        public static final int border_ui=0x7f020001;
+        public static final int empty_person=0x7f020002;
+        public static final int file=0x7f020003;
+        public static final int folder=0x7f020004;
+        public static final int ic_launcher=0x7f020005;
+        public static final int loading=0x7f020006;
+        public static final int organization=0x7f020007;
+        public static final int remove=0x7f020008;
+        public static final int rock_both=0x7f020009;
+        public static final int rock_down=0x7f02000a;
+        public static final int rock_shadow=0x7f02000b;
+        public static final int rock_up=0x7f02000c;
+        public static final int rock_up_down=0x7f02000d;
+        public static final int sync=0x7f02000e;
     }
     public static final class id {
-        public static final int appChkSyncThisApp=0x7f04000c;
-        public static final int appIcon=0x7f040008;
-        public static final int appIconSizer=0x7f04000b;
-        public static final int appLinearLayLeft=0x7f040007;
-        public static final int appLinearLayRight=0x7f04000a;
-        public static final int appList=0x7f040006;
-        public static final int appName=0x7f040009;
-        public static final int browser=0x7f040004;
+        public static final int activity_main_title=0x7f040004;
+        public static final int add_member_list_view=0x7f040007;
+        public static final int app_auto_togglebutton=0x7f040016;
+        public static final int app_checkbox=0x7f040015;
+        public static final int app_icon=0x7f04000e;
+        public static final int app_last_sync=0x7f040011;
+        public static final int app_last_sync_label=0x7f040010;
+        public static final int app_left_column=0x7f040014;
+        public static final int app_name=0x7f04000f;
+        public static final int app_right_column=0x7f04000d;
+        public static final int app_sync=0x7f040013;
+        public static final int app_view_in_trello=0x7f040012;
+        public static final int apps_farm=0x7f040019;
+        public static final int apps_farm_label=0x7f040018;
+        public static final int apps_list_view=0x7f04001b;
+        public static final int browser=0x7f04001c;
+        public static final int browser_loading=0x7f04001d;
+        public static final int butAddOrgoAdd=0x7f04000b;
+        public static final int butAddOrgoCancel=0x7f04000c;
         public static final int down=0x7f040001;
-        public static final int iconDoing=0x7f040010;
-        public static final int iconDone=0x7f040011;
-        public static final int iconSynced=0x7f040015;
-        public static final int iconSyncing=0x7f040014;
-        public static final int iconUnSynced=0x7f04000d;
+        public static final int etAddOrgoName=0x7f040009;
+        public static final int layAddOrgoBottombar=0x7f04000a;
+        public static final int layAddOrgoTopbar=0x7f040008;
+        public static final int layAppsListHeaderbar=0x7f04001a;
+        public static final int layAppsListTopbar=0x7f040017;
         public static final int left=0x7f040003;
-        public static final int linearLayDone=0x7f04000f;
-        public static final int linearLaySync=0x7f040013;
-        public static final int list_view=0x7f04000e;
-        public static final int menu_addOrganization=0x7f040017;
-        public static final int menu_settings=0x7f040016;
-        public static final int organizationTitle=0x7f040012;
+        public static final int list_item_1_checkbox=0x7f040021;
+        public static final int list_item_1_image=0x7f04001e;
+        public static final int list_item_1_largeText=0x7f04001f;
+        public static final int list_item_1_smallText=0x7f040020;
+        public static final int list_item_2_icon=0x7f040022;
+        public static final int list_item_2_text=0x7f040023;
+        public static final int list_view=0x7f040024;
+        public static final int member_avatar=0x7f040025;
+        public static final int member_checkbox=0x7f040028;
+        public static final int member_largeText=0x7f040026;
+        public static final int member_list_item_image=0x7f040029;
+        public static final int member_list_item_largeText=0x7f04002b;
+        public static final int member_list_item_largeText_center=0x7f04002a;
+        public static final int member_list_item_remove=0x7f04002d;
+        public static final int member_list_item_smallText=0x7f04002c;
+        public static final int member_list_next=0x7f04002f;
+        public static final int member_list_view=0x7f04002e;
+        public static final int member_search=0x7f040006;
+        public static final int member_smallText=0x7f040027;
+        public static final int menu_addOrganization=0x7f040037;
+        public static final int menu_apps_account=0x7f040033;
+        public static final int menu_apps_members=0x7f040035;
+        public static final int menu_apps_organization=0x7f040034;
+        public static final int menu_members_done=0x7f040036;
+        public static final int organizationIcon=0x7f040030;
+        public static final int organizationTitle=0x7f040031;
+        public static final int organization_list_titlebar=0x7f040032;
         public static final int right=0x7f040002;
         public static final int setupAccount=0x7f040005;
         public static final int up=0x7f040000;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
-        public static final int app=0x7f030001;
-        public static final int browser=0x7f030002;
-        public static final int list_view=0x7f030003;
-        public static final int organization=0x7f030004;
+        public static final int add_member_list=0x7f030001;
+        public static final int add_organization=0x7f030002;
+        public static final int app=0x7f030003;
+        public static final int apps_list=0x7f030004;
+        public static final int browser=0x7f030005;
+        public static final int list_item_1=0x7f030006;
+        public static final int list_item_2=0x7f030007;
+        public static final int list_view=0x7f030008;
+        public static final int loading=0x7f030009;
+        public static final int member=0x7f03000a;
+        public static final int member_list_item=0x7f03000b;
+        public static final int member_list_view=0x7f03000c;
+        public static final int organization=0x7f03000d;
+        public static final int organizations_list=0x7f03000e;
     }
     public static final class menu {
-        public static final int activity_main=0x7f080000;
-        public static final int organizations_list=0x7f080001;
+        public static final int apps_list=0x7f080000;
+        public static final int members_list=0x7f080001;
+        public static final int organizations_list=0x7f080002;
     }
     public static final class string {
+        public static final int AppsListTitle=0x7f060023;
+        public static final int activity_main_setup_button=0x7f060005;
+        public static final int activity_main_text1=0x7f060004;
+        public static final int activity_main_title=0x7f060003;
+        /**      MainActivity 
+         */
+        public static final int activity_main_topbar=0x7f060002;
+        public static final int add_member_list_add_dialog_message_1=0x7f06001e;
+        public static final int add_member_list_add_dialog_message_2=0x7f06001f;
+        public static final int add_member_list_add_dialog_no=0x7f060021;
+        public static final int add_member_list_add_dialog_title=0x7f06001d;
+        public static final int add_member_list_add_dialog_yes=0x7f060020;
+        public static final int add_member_list_loading=0x7f06001b;
+        public static final int add_member_list_new_person=0x7f06001a;
+        public static final int add_member_list_search=0x7f06001c;
+        /**      AddMemberList 
+         */
+        public static final int add_member_list_topbar=0x7f060019;
+        public static final int add_organization_cancel=0x7f06000a;
+        public static final int add_organization_create=0x7f060009;
+        public static final int add_organization_hint=0x7f060008;
+        public static final int add_organization_text1=0x7f060007;
+        /**      AddOrganization 
+         */
+        public static final int add_organization_topbar=0x7f060006;
+        public static final int app_name=0x7f060000;
+        public static final int app_never_sync=0x7f060025;
+        public static final int app_sync=0x7f060024;
         /**      AppsList 
          */
-        public static final int AppsListTitle=0x7f060008;
+        public static final int apps_list_topbar=0x7f060022;
+        public static final int login_change_account=0x7f060001;
+        public static final int member_list_add_person=0x7f060012;
+        public static final int member_list_next=0x7f060011;
+        public static final int member_list_remove_dialog_message_1=0x7f060014;
+        public static final int member_list_remove_dialog_message_2=0x7f060015;
+        public static final int member_list_remove_dialog_no=0x7f060017;
+        public static final int member_list_remove_dialog_title=0x7f060013;
+        public static final int member_list_remove_dialog_yes=0x7f060016;
+        public static final int member_list_remove_failed=0x7f060018;
+        /**      MemberList 
+         */
+        public static final int member_list_topbar=0x7f060010;
+        public static final int menu_organizations_list_create=0x7f06000e;
+        public static final int organizations_list_create=0x7f06000f;
+        public static final int organizations_list_text1=0x7f06000c;
         /**      OrganizationsList 
          */
-        public static final int OrganizationsListTitle=0x7f060006;
-        public static final int app_name=0x7f060000;
-        public static final int app_sync=0x7f060009;
-        public static final int hello_world=0x7f060003;
-        public static final int menu_addOrganization=0x7f060007;
-        public static final int menu_settings=0x7f060005;
-        public static final int no_name=0x7f060004;
-        public static final int rockapp_preferences_name=0x7f060002;
-        public static final int trello_compatiable=0x7f060001;
+        public static final int organizations_list_topbar=0x7f06000b;
+        public static final int organizations_list_view=0x7f06000d;
     }
     public static final class style {
         /** 

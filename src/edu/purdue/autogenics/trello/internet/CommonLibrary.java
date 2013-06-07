@@ -37,7 +37,7 @@ public class CommonLibrary {
 			return "";
 		}
 	}
-	public HttpResponse getData(String url) {
+	public static HttpResponse getData(String url) {
 		HttpResponse response = null;
 		try {
 			HttpClient client = new DefaultHttpClient();

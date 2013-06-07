@@ -1,0 +1,67 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddOrganization" >
+
+   <LinearLayout 
+        android:id="@+id/layAddOrgoTopbar"
+        android:layout_width="match_parent" 
+	    android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+		android:layout_alignParentLeft="true"
+        android:orientation="horizontal"
+        android:background="#357EC7">
+        <TextView 
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="16dp"
+	        android:layout_marginLeft="16dp"
+			android:layout_marginBottom="16dp"
+	        android:text="@string/add_organization_text1"
+	        android:textSize="20sp"
+	        android:textColor="#FFFFFF"
+	        />
+    </LinearLayout>
+    <EditText 
+        android:id="@+id/etAddOrgoName"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/layAddOrgoTopbar"
+        android:hint="@string/add_organization_hint"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="8dp"
+        />
+
+	<LinearLayout 
+	        android:id="@+id/layAddOrgoBottombar"
+	        android:layout_width="match_parent" 
+		    android:layout_height="48dp"
+	        android:orientation="horizontal"
+	        android:background="#BEBEBE"
+	        android:layout_alignParentBottom="true"
+	        android:layout_alignParentLeft="true"
+	        android:weightSum="100">
+       	<Button 
+	        android:id="@+id/butAddOrgoAdd"
+	        android:layout_width="fill_parent"
+	        android:layout_height="40dp"
+	        android:layout_marginTop="4dp"
+	        android:layout_marginRight="2dp"
+	        android:layout_marginLeft="4dp"
+	        android:text="@string/add_organization_create"
+	        android:background="#EEEEEE"
+	        android:layout_weight="50" />
+	    <Button 
+	        android:id="@+id/butAddOrgoCancel"
+	        android:layout_width="fill_parent"
+	        android:layout_height="40dp"
+	        android:layout_marginTop="4dp"
+	        android:layout_marginLeft="2dp"
+	        android:layout_marginRight="4dp"
+	        android:text="@string/add_organization_cancel"
+	        android:background="#EEEEEE"
+	        android:layout_weight="50" />
+    </LinearLayout>
+
+</RelativeLayout>

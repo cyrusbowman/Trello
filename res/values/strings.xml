@@ -1,18 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Trello</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="no_name">No Name</string>
-        
-    <string name="menu_settings">Logout of Google</string>
+    <string name="app_name">Trello</string>    
+    <string name="login_change_account">Change Account</string>
     
+<!--     MainActivity -->  
+	<string name="activity_main_topbar">Setup Sharing</string>
+	<string name="activity_main_title">Sync with Trello</string>
+    <string name="activity_main_text1">To share data you can setup a free account on Trello and add people from your farm.</string>
+    <string name="activity_main_setup_button">Setup Sharing</string>
+    
+<!--     AddOrganization -->  
+	<string name="add_organization_topbar">Setup Farm Organization</string>
+    <string name="add_organization_text1">Farm Organization</string>
+    <string name="add_organization_hint">Give your farm a name</string>
+    <string name="add_organization_create">Create Farm</string>
+    <string name="add_organization_cancel">Cancel</string>
+   
 <!--     OrganizationsList -->  
-	<string name="OrganizationsListTitle">Select a organization to sync with</string>
-    <string name="menu_addOrganization">Add Organization</string>
+	<string name="organizations_list_topbar">Setup Farm Organization</string>
+    <string name="organizations_list_text1">Farm Organization</string>
+    <string name="organizations_list_view">View in Trello</string>
+    <string name="menu_organizations_list_create">Create New Farm</string>
+    <string name="organizations_list_create">Create New Farm</string>
+    
+<!--     MemberList -->  
+	<string name="member_list_topbar">People on the Farm</string>
+    <string name="member_list_next">Setup Syncing</string>
+    <string name="member_list_add_person">Add Person</string>
+    <string name="member_list_remove_dialog_title">Remove Person</string>
+    <string name="member_list_remove_dialog_message_1">Are you sure you want to remove </string>
+    <string name="member_list_remove_dialog_message_2"> from your farm?</string>
+    <string name="member_list_remove_dialog_yes">Yes</string>
+    <string name="member_list_remove_dialog_no">No</string>
+    <string name="member_list_remove_failed">Must have at least one farm administrator</string>
+  
+<!--     AddMemberList --> 
+	<string name="add_member_list_topbar">Add Person to Farm</string> 
+	<string name="add_member_list_new_person">Create New Trello Account</string>
+	<string name="add_member_list_loading">Loading&#8230;</string>
+    <string name="add_member_list_search">Search</string>
+    <string name="add_member_list_add_dialog_title">Add Person</string>
+    <string name="add_member_list_add_dialog_message_1">Are you sure you want to add </string>
+    <string name="add_member_list_add_dialog_message_2"> to your farm?</string>
+    <string name="add_member_list_add_dialog_yes">Yes</string>
+    <string name="add_member_list_add_dialog_no">No</string>
     
 <!--     AppsList -->
-	<string name="AppsListTitle">Apps available for Trello syncing</string>
+	<string name="apps_list_topbar">Syncing</string> 
+	<string name="AppsListTitle">Apps available for syncing</string>
     <string name="app_sync">Allow Syncing</string>
+    <string name="app_never_sync">Never Synced</string>
+    
     
 </resources>

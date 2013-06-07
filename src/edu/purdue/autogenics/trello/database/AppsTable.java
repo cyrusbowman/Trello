@@ -9,16 +9,20 @@ public class AppsTable {
     // Contacts Table Columns names
     public static final String COL_ID = "_id";
     public static final String COL_NAME = "name";
-    public static final String PACKAGE_NAME = "package_name";
+    public static final String COL_PACKAGE_NAME = "package_name";
     public static final String COL_ALLOW_SYNCING = "allow_syncing";
+    public static final String COL_AUTO_SYNC = "auto_sync";
+    public static final String COL_BOARD_NAME = "board_name";
     public static final String COL_LAST_SYNC = "lastsync";
     
     private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME 
     		+ "(" 
             + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," 
             + COL_NAME + " VARCHAR(200),"
-            + PACKAGE_NAME + " VARCHAR(200),"
+            + COL_PACKAGE_NAME + " VARCHAR(200),"
             + COL_ALLOW_SYNCING + " INTEGER,"
+            + COL_AUTO_SYNC + " INTEGER,"
+            + COL_BOARD_NAME + " VARCHAR(50),"
             + COL_LAST_SYNC + " VARCHAR(50)"
     		+ ")";
     

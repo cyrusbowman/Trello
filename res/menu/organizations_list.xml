@@ -4,7 +4,7 @@
         android:id="@+id/menu_addOrganization"
         android:orderInCategory="100"
         android:showAsAction="ifRoom|withText"
-        android:title="@string/menu_addOrganization"
+        android:title="@string/menu_organizations_list_create"
         android:layout_gravity="bottom"/>
     
 </menu>

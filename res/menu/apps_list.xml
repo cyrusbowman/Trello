@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+	<item
+        android:id="@+id/menu_apps_account"
+        android:orderInCategory="100"
+        android:title="Change account"
+        android:layout_gravity="bottom"/>  
+    <item
+        android:id="@+id/menu_apps_organization"
+        android:orderInCategory="100"
+        android:title="Change organization"
+        android:layout_gravity="bottom"/>
+     <item
+        android:id="@+id/menu_apps_members"
+        android:orderInCategory="100"
+        android:title="Edit members"
+        android:layout_gravity="bottom"/>  
+</menu>
