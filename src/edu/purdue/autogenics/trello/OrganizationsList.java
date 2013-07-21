@@ -132,7 +132,7 @@ public class OrganizationsList extends Activity implements OnClickListener,
 					.getDefaultSharedPreferences(getApplicationContext());
 			SharedPreferences.Editor editor = prefs.edit();
 			editor.putString("organizationId", item.getId().trim());
-			editor.putString("organizationName", item.getName().trim());
+			editor.putString("organizationName", item.getDisplayName().trim());
 			editor.putBoolean("FirstSetup", true);
 			editor.commit();
 			

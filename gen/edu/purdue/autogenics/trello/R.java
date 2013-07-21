@@ -41,7 +41,7 @@ containing a value of this type.
         public static final int empty_person=0x7f020002;
         public static final int file=0x7f020003;
         public static final int folder=0x7f020004;
-        public static final int ic_launcher=0x7f020005;
+        public static final int launcher=0x7f020005;
         public static final int loading=0x7f020006;
         public static final int organization=0x7f020007;
         public static final int remove=0x7f020008;
@@ -98,11 +98,13 @@ containing a value of this type.
         public static final int member_list_view=0x7f04002e;
         public static final int member_search=0x7f040006;
         public static final int member_smallText=0x7f040027;
-        public static final int menu_addOrganization=0x7f040037;
+        public static final int menu_addOrganization=0x7f040039;
         public static final int menu_apps_account=0x7f040033;
         public static final int menu_apps_members=0x7f040035;
         public static final int menu_apps_organization=0x7f040034;
-        public static final int menu_members_done=0x7f040036;
+        public static final int menu_help=0x7f040036;
+        public static final int menu_legal=0x7f040037;
+        public static final int menu_members_done=0x7f040038;
         public static final int organizationIcon=0x7f040030;
         public static final int organizationTitle=0x7f040031;
         public static final int organization_list_titlebar=0x7f040032;
@@ -129,8 +131,9 @@ containing a value of this type.
     }
     public static final class menu {
         public static final int apps_list=0x7f080000;
-        public static final int members_list=0x7f080001;
-        public static final int organizations_list=0x7f080002;
+        public static final int mainactivity=0x7f080001;
+        public static final int members_list=0x7f080002;
+        public static final int organizations_list=0x7f080003;
     }
     public static final class string {
         public static final int AppsListTitle=0x7f060023;

@@ -14,4 +14,14 @@
         android:orderInCategory="100"
         android:title="Edit members"
         android:layout_gravity="bottom"/>  
+     <item
+        android:id="@+id/menu_help"
+        android:orderInCategory="100"
+        android:title="Help"
+        android:layout_gravity="bottom"/>
+     <item
+        android:id="@+id/menu_legal"
+        android:orderInCategory="100"
+        android:title="Legal"
+        android:layout_gravity="bottom"/>
 </menu>

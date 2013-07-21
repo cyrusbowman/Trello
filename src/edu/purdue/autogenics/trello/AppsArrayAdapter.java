@@ -2,19 +2,12 @@ package edu.purdue.autogenics.trello;
 
 import java.util.List;
 
-import edu.purdue.autogenics.trello.R;
-
-import edu.purdue.autogenics.trello.database.AppsTable;
-import edu.purdue.autogenics.trello.database.DatabaseHandler;
-import edu.purdue.autogenics.trello.internet.App;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +23,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+import edu.purdue.autogenics.trello.database.AppsTable;
+import edu.purdue.autogenics.trello.database.DatabaseHandler;
+import edu.purdue.autogenics.trello.internet.App;
 
 public class AppsArrayAdapter extends ArrayAdapter<App> {
 	private final Context context;
@@ -69,6 +65,8 @@ public class AppsArrayAdapter extends ArrayAdapter<App> {
 			Boolean auto = (apps.get(position).getAutoSync() == 1) ? true : false;
 			holder.autoSync.setChecked(auto);
 			holder.sync = (ImageButton)  row.findViewById(R.id.app_sync);
+			if(apps.get(position).getSyncApp()) holder.sync.setVisibility(View.VISIBLE);
+			
 			holder.txtViewTrello = (TextView)  row.findViewById(R.id.app_view_in_trello);
 			holder.txtAppLastSync = (TextView)  row.findViewById(R.id.app_last_sync);
 			
@@ -98,7 +96,11 @@ public class AppsArrayAdapter extends ArrayAdapter<App> {
 				holder.chkSyncing.setEnabled(false);
 			}
 			
-			holder.chkSyncing.setTag(apps.get(position));
+			SyncHolder syncHolder = new SyncHolder();
+			syncHolder.app = apps.get(position);
+			syncHolder.syncButton = holder.sync;
+			
+			holder.chkSyncing.setTag(syncHolder);
 			holder.chkSyncing.setOnCheckedChangeListener(chkSyncingListener);
 			
 			holder.sync.setTag(apps.get(position));
@@ -163,11 +165,25 @@ public class AppsArrayAdapter extends ArrayAdapter<App> {
         TextView txtAppLastSync;
     }
 	
+	static class SyncHolder
+    {
+        App app;
+        ImageButton syncButton;
+    }
+	
 	private OnCheckedChangeListener chkSyncingListener = new OnCheckedChangeListener(){
 		@Override
 		public void onCheckedChanged(CompoundButton buttonView,
-				boolean isChecked) {
-			final App parentApp = (App) buttonView.getTag();
+				boolean isChecked) {			
+			final SyncHolder parentSyncHolder = (SyncHolder) buttonView.getTag();
+			final App parentApp = parentSyncHolder.app;
+			
+			if(isChecked){
+				parentSyncHolder.syncButton.setVisibility(View.VISIBLE);
+			} else {
+				parentSyncHolder.syncButton.setVisibility(View.INVISIBLE);
+			}
+			
 			
 			//Save this selection in database
 			database = dbHandler.getWritableDatabase();
@@ -220,7 +236,7 @@ public class AppsArrayAdapter extends ArrayAdapter<App> {
 		public void onCheckedChanged(CompoundButton buttonView,
 				boolean isChecked) {
 			final App parentApp = (App) buttonView.getTag();
-			
+
 			//Save this selection in database
 			database = dbHandler.getWritableDatabase();
 			
@@ -265,6 +281,7 @@ public class AppsArrayAdapter extends ArrayAdapter<App> {
 			//Send a sync intent to this app
 			PackageManager pm = context.getPackageManager();
 			Intent appStartIntent = pm.getLaunchIntentForPackage(parentApp.getPackageName());
+			appStartIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			if(appStartIntent != null){
 				appStartIntent.putExtra("todo", "sync");
 			    context.startActivity(appStartIntent);

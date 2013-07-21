@@ -7,7 +7,7 @@ int drawable border_ui 0x7f020001
 int drawable empty_person 0x7f020002
 int drawable file 0x7f020003
 int drawable folder 0x7f020004
-int drawable ic_launcher 0x7f020005
+int drawable launcher 0x7f020005
 int drawable loading 0x7f020006
 int drawable organization 0x7f020007
 int drawable remove 0x7f020008
@@ -62,11 +62,13 @@ int id member_list_next 0x7f04002f
 int id member_list_view 0x7f04002e
 int id member_search 0x7f040006
 int id member_smallText 0x7f040027
-int id menu_addOrganization 0x7f040037
+int id menu_addOrganization 0x7f040039
 int id menu_apps_account 0x7f040033
 int id menu_apps_members 0x7f040035
 int id menu_apps_organization 0x7f040034
-int id menu_members_done 0x7f040036
+int id menu_help 0x7f040036
+int id menu_legal 0x7f040037
+int id menu_members_done 0x7f040038
 int id organizationIcon 0x7f040030
 int id organizationTitle 0x7f040031
 int id organization_list_titlebar 0x7f040032
@@ -89,8 +91,9 @@ int layout member_list_view 0x7f03000c
 int layout organization 0x7f03000d
 int layout organizations_list 0x7f03000e
 int menu apps_list 0x7f080000
-int menu members_list 0x7f080001
-int menu organizations_list 0x7f080002
+int menu mainactivity 0x7f080001
+int menu members_list 0x7f080002
+int menu organizations_list 0x7f080003
 int string AppsListTitle 0x7f060023
 int string activity_main_setup_button 0x7f060005
 int string activity_main_text1 0x7f060004
