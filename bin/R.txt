@@ -132,6 +132,8 @@ int string organizations_list_create 0x7f06000f
 int string organizations_list_text1 0x7f06000c
 int string organizations_list_topbar 0x7f06000b
 int string organizations_list_view 0x7f06000d
+int string permission_desc 0x7f060027
+int string permission_label 0x7f060026
 int style AppBaseTheme 0x7f070000
 int style AppTheme 0x7f070001
 int[] styleable SlideLayout { 0x7f010000, 0x7f010001 }
